@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="barba.joel.wlt_reg.MainActivity"
+    tools:showIn="@layout/activity_main"
+    android:contextClickable="false"
+    android:background="#ffffff"
+    android:nestedScrollingEnabled="false"
+    android:touchscreenBlocksFocus="false">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Current wallet amount:"
+        android:textSize="20dp"
+        android:id="@+id/textView2" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="46,03 €"
+        android:textSize="80dp"
+        android:id="@+id/label_saldo"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textAlignment="center"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add input"
+        android:id="@+id/button_add_in"
+        android:layout_marginTop="36dp"
+        android:textSize="20dp"
+        android:height="60dp"
+        android:layout_below="@+id/label_saldo"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add output"
+        android:id="@+id/button_add_out"
+        android:textSize="20dp"
+        android:height="60dp"
+        android:layout_alignTop="@+id/button_add_in"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number|numberDecimal"
+        android:ems="10"
+        android:id="@+id/edit_new_input"
+        android:layout_marginTop="35dp"
+        android:text=""
+        android:textSize="50dp"
+        android:textAlignment="textEnd"
+        android:layout_below="@+id/button_add_in"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:digits="0123456789," />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/input_desc_moviment"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/edit_new_input"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="50dp"
+        android:text="expense"
+        android:textAlignment="textStart"
+        android:textSize="30dp"
+        android:selectAllOnFocus="false"
+        android:singleLine="false"
+        android:lines="3"
+        android:maxLines="3"
+        android:inputType="text" />
+
+</RelativeLayout>
