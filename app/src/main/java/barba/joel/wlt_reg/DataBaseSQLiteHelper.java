@@ -8,7 +8,7 @@ import android.widget.Toast;
 public class DataBaseSQLiteHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "DB_WALLET_REG";
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 12;
 
     // Definició de la base de dades
     String sent_create_saldo_act = "create table SALDO_ACT (" +
@@ -23,7 +23,7 @@ public class DataBaseSQLiteHelper extends SQLiteOpenHelper {
             "geoposicio   text," +
             "saldo_post   long)";
 
-    String sent_create_trigger = "create trigger SALDO_ACT_TRIGGER after insert on MOVIMENTS " +
+    String sent_create_trigger1 = "create trigger SALDO_ACT_TRIGGER after insert on MOVIMENTS " +
             "begin " +
                 "delete from SALDO_ACT; " +
                 "insert into SALDO_ACT (id_ult_mov, saldo) " +
@@ -31,6 +31,13 @@ public class DataBaseSQLiteHelper extends SQLiteOpenHelper {
                 "where id_mov = (select max(id_mov) from MOVIMENTS); " +
             "end;";
 
+    String sent_create_trigger2 = "create trigger SALDO_ACT_TRIGGER2 after delete on MOVIMENTS " +
+            "begin " +
+            "delete from SALDO_ACT; " +
+            "insert into SALDO_ACT (id_ult_mov, saldo) " +
+            "select id_mov, saldo_post from MOVIMENTS " +
+            "where id_mov = (select max(id_mov) from MOVIMENTS); " +
+            "end;";
 
     public DataBaseSQLiteHelper(Context contexto) {
         super(contexto, DATABASE_NAME, null, DATABASE_VERSION);
@@ -40,7 +47,9 @@ public class DataBaseSQLiteHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(sent_create_saldo_act);
         db.execSQL(sent_create_moviments);
-        db.execSQL(sent_create_trigger);
+        db.execSQL(sent_create_trigger1);
+        db.execSQL(sent_create_trigger2);
+
 
     }
 
@@ -49,6 +58,7 @@ public class DataBaseSQLiteHelper extends SQLiteOpenHelper {
 
         // Si s'ha canviat de versió, actualitza i exporta les dades
         db.execSQL("drop trigger if exists SALDO_ACT_TRIGGER");
+        db.execSQL("drop trigger if exists SALDO_ACT_TRIGGER2");
         db.execSQL("drop table if exists SALDO_ACT");
         db.execSQL("drop table if exists MOVIMENTS");
 
@@ -56,7 +66,8 @@ public class DataBaseSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(sent_create_saldo_act);
         db.execSQL("insert into SALDO_ACT (saldo, id_ult_mov) values (0, null)");
         db.execSQL(sent_create_moviments);
-        db.execSQL(sent_create_trigger);
+        db.execSQL(sent_create_trigger1);
+        db.execSQL(sent_create_trigger2);
 
     }
 }

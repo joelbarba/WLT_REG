@@ -1,9 +1,8 @@
 package barba.joel.wlt_reg;
 
-import android.content.Intent;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,14 +12,15 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
-
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import java.text.DecimalFormat;
 
 public class MainActivity extends AppCompatActivity {
 
     private DBManager DB_WR = null;
+    final Context context = this;
     private static final String LOGTAG = "MainActivity";
 
     @Override
@@ -41,38 +41,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 */
-        mostrar_avis("INI APP");
-        Log.i(LOGTAG, "ini appppp");
+        // mostrar_avis("INI APP");
+        // Log.i(LOGTAG, "ini appppp");
 
 
 
         // Iniciar DB
         DB_WR = new DBManager(getApplicationContext()); // Crear l'interface amb la DB
         DB_WR.open();
-        DB_WR.ini_db(true);
-
-/*
-        // Obrir la base de dades 'DBUsuarios' en mode escriptura
-        DataBaseSQLiteHelper usdbh = new DataBaseSQLiteHelper(this);
-        final SQLiteDatabase db = usdbh.getWritableDatabase();
-
-        // Si s'ha obert correctament
-        if(db != null) {
-            // Per exemple, insertar 5 registres
-            for(int i=1; i<=5; i++) {
-                db.execSQL("INSERT INTO moviments (id_mov, descripcio, saldo) " +
-                        "VALUES (" + i + ", 'aaaa', " + (i * 43) + ")");
-            }
-            db.close();
-        }
-*/
+        DB_WR.ini_db(false);
+        mostrarSaldoAct(DB_WR.get_saldo());
 
 
         // Instanciar els controls
         final EditText edit_import_operacio = (EditText)findViewById(R.id.edit_new_input);
         final Button boto_in = (Button)findViewById(R.id.button_add_in);
         final Button boto_out = (Button)findViewById(R.id.button_add_out);
-        final TextView etq_saldo = (TextView)findViewById(R.id.label_saldo);
 
 
         boto_in.setOnClickListener(new View.OnClickListener() {
@@ -96,7 +80,28 @@ public class MainActivity extends AppCompatActivity {
         boto_del_last.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mostrar_avis("DDDEEL");
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                alertDialogBuilder.setTitle("Atenció");
+
+                alertDialogBuilder
+                        .setMessage("Estas segur que vols eliminar la última operació?")
+                        .setCancelable(true)
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                // Confirmació possitiva
+                                DB_WR.eliminar_ult_mov();
+                                mostrarUltMov();
+                                mostrarSaldoAct(DB_WR.get_saldo());
+                            }
+                        })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) { dialog.cancel(); }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();  // create alert dialog
+                alertDialog.show();     // show it
+
             }
         });
 
@@ -110,11 +115,7 @@ public class MainActivity extends AppCompatActivity {
         if (import_num != 0) {
             double saldo_act = DB_WR.insert_new_mov(import_num, descripcio);
             mostrarSaldoAct(saldo_act);
-
-            TextView etq_info_last = (TextView)findViewById(R.id.id_label_info_last);
-            etq_info_last.setText(DB_WR.get_last_mov_info());
-
-
+            mostrarUltMov();
             mostrar_avis("S'han pagat " + editarImport(import_num) + " €");
             iniInputsOp();
         }
@@ -132,13 +133,23 @@ public class MainActivity extends AppCompatActivity {
 
 
     // Mostrar el saldo actual editat al Text View principal
-    boolean mostrarSaldoAct(double saldo) {
+    private void mostrarSaldoAct(double saldo) {
         TextView etq_saldo = (TextView)findViewById(R.id.label_saldo);
-        DecimalFormat twoDForm = new DecimalFormat("0.00");
-        String import_num_ok = String.valueOf(twoDForm.format(saldo));
-        etq_saldo.setText(import_num_ok.replace(".", ",") + " €");
-        // etq_saldo.setText(editarImport(saldo));
-        return true;
+        // DecimalFormat twoDForm = new DecimalFormat("0.00");
+        // String import_num_ok = String.valueOf(twoDForm.format(saldo));
+        // etq_saldo.setText(import_num_ok.replace(".", ",") + " €");
+        etq_saldo.setText(editarImport(saldo));
+    }
+
+    private void mostrarUltMov() {
+        String ult_mov[] = DB_WR.get_last_mov_info();
+        TextView id_label_info_last_imp = (TextView)findViewById(R.id.id_label_info_last_imp);
+        TextView id_label_info_last_date = (TextView)findViewById(R.id.id_label_info_last_date);
+
+        id_label_info_last_imp.setText(ult_mov[0]);
+        id_label_info_last_date.setText(ult_mov[1]);
+        if (ult_mov[2] == "-") {   id_label_info_last_imp.setTextColor(getResources().getColor(R.color.colorImpNeg)); }
+        else {                      id_label_info_last_imp.setTextColor(getResources().getColor(R.color.colorImpPos)); }
     }
 
 

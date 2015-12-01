@@ -32,29 +32,30 @@ public class DBManager {
     }
 
     public void ini_db(boolean reload) {
-
         if ((reload) || (db.rawQuery("select 1 from SALDO_ACT", null).getCount() == 0)) {
             db.execSQL("delete from SALDO_ACT");
             db.execSQL("delete from MOVIMENTS");
             db.execSQL("insert into SALDO_ACT (saldo) values (0)");
         }
-
     }
+
+
+
+
+
 
     // Retorna el saldo actual
     public double get_saldo() {
         double saldo = 0;
-
-
         Cursor F_cursor = db.rawQuery("select saldo from SALDO_ACT", null);
         if (F_cursor.moveToFirst()) {   saldo = F_cursor.getDouble(0); }
         F_cursor.close();
-
         return saldo;
     }
 
-    // Retorna el saldo actual
-    public String get_last_mov_info() {
+
+    // Retorna info del últim moviment editada. 0=>Import editat, 1=>Data editada, 2=>Signe
+    public String[] get_last_mov_info() {
         double import_mov = 0;
         String date_mov = "";
 
@@ -65,8 +66,11 @@ public class DBManager {
         }
         F_cursor.close();
 
-        return "Last mov: " + editarImport(import_mov) + " € \n" + date_mov;
+        String signe = "";
+        if (import_mov < 0) { signe = "-"; }
+        return new String[] { editarImport(import_mov), date_mov, signe};
     }
+
 
     // Inserir nou moviment, i retornar el saldo actual
     public double insert_new_mov(double mov_import, String descripcio) {
@@ -85,20 +89,21 @@ public class DBManager {
         newRow.put("saldo_post",    String.valueOf(saldo_post)); //
         db.insert("MOVIMENTS", null, newRow);
 
-
-/*
-        db.execSQL( "insert into MOVIMENTS " +
-                    "select ifnull(max(id_mov), 0) + 1, " +
-                    "       replace('" + saldo + "', ',', '.')," +
-                            "'" + descripcio + "', " +
-                            "DATETIME('now') " +
-                    "  from MOVIMENTS");
-        db.execSQL( "update SALDO_ACT set saldo = saldo + " + String.valueOf(mov_import));
-*/
-
         return get_saldo();
 
     }
+
+
+    // Eliminar l'últim moviment
+    public boolean eliminar_ult_mov() {
+
+        db.execSQL("delete from MOVIMENTS where id_mov = (select id_ult_mov from SALDO_ACT) ");
+
+        return true;
+    }
+
+
+
 
     // Convertir double a format String amb 2 decimals fixos
     String editarImport(double import_num) {
@@ -112,9 +117,5 @@ public class DBManager {
         return db.rawQuery("select id_mov, saldo, descripcio from MOVIMENTS", null);
     }
 
-    double roundTwoDecimals(double d) {
-        DecimalFormat twoDForm = new DecimalFormat("0.00");
-        return Double.valueOf(twoDForm.format(d));
-    }
 
 }
