@@ -74,24 +74,40 @@
         android:layout_alignParentStart="true"
         android:digits="0123456789," />
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:id="@+id/input_desc_moviment"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:layout_height="wrap_content"
+        android:text="Last mov: 35 € \n2015-11-01 12:18"
+        android:id="@+id/id_label_info_last"
+        android:layout_below="@+id/edit_new_input"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/edit_new_input"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="50dp"
-        android:text="expense"
-        android:textAlignment="textStart"
-        android:textSize="30dp"
-        android:selectAllOnFocus="false"
-        android:singleLine="false"
-        android:lines="3"
-        android:maxLines="3"
-        android:inputType="text" />
+        android:layout_marginTop="37dp"
+        android:textSize="25dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="X"
+        android:id="@+id/button_del_last"
+        android:width="60dp"
+        android:layout_alignTop="@+id/id_label_info_last"
+        android:layout_toLeftOf="@+id/button2"
+        android:layout_toStartOf="@+id/button2"
+        android:layout_alignBottom="@+id/id_label_info_last"
+        android:layout_marginRight="10dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="m"
+        android:id="@+id/button2"
+        android:width="60dp"
+        android:layout_alignTop="@+id/button_del_last"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/id_label_info_last" />
 
 </RelativeLayout>

@@ -21,13 +21,14 @@ import java.text.DecimalFormat;
 public class MainActivity extends AppCompatActivity {
 
     private DBManager DB_WR = null;
+    private static final String LOGTAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-/*
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 /*
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         });
 */
         mostrar_avis("INI APP");
+        Log.i(LOGTAG, "ini appppp");
 
 
 
@@ -68,50 +70,115 @@ public class MainActivity extends AppCompatActivity {
 
         // Instanciar els controls
         final EditText edit_import_operacio = (EditText)findViewById(R.id.edit_new_input);
-        final EditText desc_operacio = (EditText)findViewById(R.id.input_desc_moviment);
         final Button boto_in = (Button)findViewById(R.id.button_add_in);
         final Button boto_out = (Button)findViewById(R.id.button_add_out);
         final TextView etq_saldo = (TextView)findViewById(R.id.label_saldo);
 
+
         boto_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Sumar el saldo de la nova operació
-                String saldo = edit_import_operacio.getText().toString();
-
-                if (saldo != "0" && saldo != "0,00") {
-                    double saldo_act = DB_WR.insert_new_mov(saldo, desc_operacio.getText().toString());
-                    double saldo_act_ok = roundTwoDecimals(saldo_act);
-                    etq_saldo.setText(String.valueOf(saldo_act_ok).replace(".", ",") + " €");
-                    mostrar_avis("S'han inserit correctament " + saldo + " €");
-                    edit_import_operacio.setText("");
-                    desc_operacio.setText("xxxxxxxx");
-                }
+                createNewOp(edit_import_operacio.getText().toString(), "", "");
+                // double import_num = convertImportStr(edit_import_operacio.getText().toString(), "");
+                // mostrarSaldoAct(import_num);
             }
         });
 
         boto_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Sumar el saldo de la nova operació
-                String saldo = edit_import_operacio.getText().toString();
-
-                if (saldo != "0" && saldo != "0,00") {
-                    double saldo_act = DB_WR.insert_new_mov("-" + saldo, desc_operacio.getText().toString());
-                    double saldo_act_ok = roundTwoDecimals(saldo_act);
-                    etq_saldo.setText(String.valueOf(saldo_act_ok).replace(".", ",") + " €");
-                    mostrar_avis("S'han pagat " + saldo + " €");
-                    edit_import_operacio.setText("");
-                    desc_operacio.setText("xxxxxxxx");
-                }
+                createNewOp(edit_import_operacio.getText().toString(), "-", "");
             }
         });
+
+
+        final Button boto_del_last = (Button)findViewById(R.id.button_del_last);
+        boto_del_last.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mostrar_avis("DDDEEL");
+            }
+        });
+
     }
 
-    double roundTwoDecimals(double d) {
-        DecimalFormat twoDForm = new DecimalFormat("0.00");
-        return Double.valueOf(twoDForm.format(d));
+    // Afegir nova operació
+    boolean createNewOp(String str_import, String sign_import, String descripcio) {
+
+        double import_num = convertImportStr(str_import, sign_import);
+
+        if (import_num != 0) {
+            double saldo_act = DB_WR.insert_new_mov(import_num, descripcio);
+            mostrarSaldoAct(saldo_act);
+
+            TextView etq_info_last = (TextView)findViewById(R.id.id_label_info_last);
+            etq_info_last.setText(DB_WR.get_last_mov_info());
+
+
+            mostrar_avis("S'han pagat " + editarImport(import_num) + " €");
+            iniInputsOp();
+        }
+        return true;
     }
+
+
+    // Inicialitzar valors dels inputs
+    boolean iniInputsOp() {
+        final EditText edit_import_operacio = (EditText)findViewById(R.id.edit_new_input);
+        edit_import_operacio.setText("");
+
+        return true;
+    }
+
+
+    // Mostrar el saldo actual editat al Text View principal
+    boolean mostrarSaldoAct(double saldo) {
+        TextView etq_saldo = (TextView)findViewById(R.id.label_saldo);
+        DecimalFormat twoDForm = new DecimalFormat("0.00");
+        String import_num_ok = String.valueOf(twoDForm.format(saldo));
+        etq_saldo.setText(import_num_ok.replace(".", ",") + " €");
+        // etq_saldo.setText(editarImport(saldo));
+        return true;
+    }
+
+
+    // Convertir double a format String amb 2 decimals fixos
+    String editarImport(double import_num) {
+        DecimalFormat twoDForm = new DecimalFormat("0.00");
+        String import_num_ok = String.valueOf(twoDForm.format(import_num));
+        return import_num_ok.replace(".", ",");
+    }
+
+
+    // Test corret import string
+    double convertImportStr(String str_import, String sign_import) {
+
+        String str_import_ok = str_import.replace(",", ".");
+        if (str_import_ok == "") { str_import_ok = "0"; }
+
+        // Comprovar que el string no conté caràcters invàlids
+        if (str_import_ok.replace(".", "")
+                .replace("1", "")
+                .replace("2", "")
+                .replace("3", "")
+                .replace("4", "")
+                .replace("5", "")
+                .replace("6", "")
+                .replace("7", "")
+                .replace("8", "")
+                .replace("9", "")
+                .replace("0", "") != "") { return 0; }
+        Log.i(LOGTAG, "str_import_ok = " + str_import_ok);
+
+        double import_mov = Double.parseDouble(str_import_ok);
+        double import_mov_ok = (double) Math.round(import_mov * 100) / 100;
+        if (sign_import == "-") { import_mov_ok = -import_mov_ok; }
+        Log.i(LOGTAG, "import_mov_ok = " + String.valueOf(import_mov_ok));
+
+        return import_mov_ok;
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
