@@ -96,8 +96,8 @@
         android:id="@+id/button_del_last"
         android:width="60dp"
         android:layout_alignTop="@+id/id_label_info_last_imp"
-        android:layout_toLeftOf="@+id/button2"
-        android:layout_toStartOf="@+id/button2"
+        android:layout_toLeftOf="@+id/boto_mod_last"
+        android:layout_toStartOf="@+id/boto_mod_last"
         android:layout_marginRight="10dp"
         android:layout_alignBottom="@+id/id_label_info_last_date" />
 
@@ -106,7 +106,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="m"
-        android:id="@+id/button2"
+        android:id="@+id/boto_mod_last"
         android:width="60dp"
         android:layout_alignTop="@+id/button_del_last"
         android:layout_alignParentRight="true"

@@ -1,6 +1,7 @@
 package barba.joel.wlt_reg;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        // Boto eliminar últim moviment
         final Button boto_del_last = (Button)findViewById(R.id.button_del_last);
         boto_del_last.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +103,17 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog alertDialog = alertDialogBuilder.create();  // create alert dialog
                 alertDialog.show();     // show it
 
+            }
+        });
+
+        // Boto modificar últim moviment
+        final Button boto_mod_last = (Button)findViewById(R.id.boto_mod_last);
+        boto_mod_last.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // DB_WR.close();
+                Intent i = new Intent(context, ListMovsActivity.class);
+                startActivity(i);
             }
         });
 

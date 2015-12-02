@@ -112,9 +112,12 @@ public class DBManager {
         return import_num_ok.replace(".", ",");
     }
 
-    // Retorna totes les llistes
-    public Cursor get_moviments() {
-        return db.rawQuery("select id_mov, saldo, descripcio from MOVIMENTS", null);
+    // Retorna tots els moviments
+    public Cursor get_llista_moviments() {
+        return db.rawQuery("select id_mov as _id, " +
+                "import || ' € / ' || data_mov      as descripcio " +
+                "'xxxxx'                            as descripcio2 " +
+                " from MOVIMENTS", null);
     }
 
 
