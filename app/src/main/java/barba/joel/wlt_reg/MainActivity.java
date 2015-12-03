@@ -24,24 +24,38 @@ public class MainActivity extends AppCompatActivity {
     final Context context = this;
     private static final String LOGTAG = "MainActivity";
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mostrarSaldoAct(DB_WR.get_saldo());
+        mostrarUltMov();
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
+        // Configurar menu superior
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-/*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public boolean onMenuItemClick(MenuItem item) {
+                mostrar_avis(String.valueOf(item.getItemId()));
+                switch (item.getItemId()) { // Opció per saltar a la pantalla llista de moviments
+                    case R.id.mov_list_show:
+                        Intent i = new Intent(context, ListMovsActivity.class);
+                        startActivity(i);
+                }
+                return true;
             }
         });
-*/
+
         // mostrar_avis("INI APP");
         // Log.i(LOGTAG, "ini appppp");
 
@@ -52,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         DB_WR.open();
         DB_WR.ini_db(false);
         mostrarSaldoAct(DB_WR.get_saldo());
+        mostrarUltMov();
 
 
         // Instanciar els controls
@@ -75,6 +90,25 @@ public class MainActivity extends AppCompatActivity {
                 createNewOp(edit_import_operacio.getText().toString(), "-", "");
             }
         });
+
+
+
+        // Clickar a sobre l'import del últim moviment
+        final TextView id_label_info_last_imp = (TextView) findViewById(R.id.id_label_info_last_imp);
+        id_label_info_last_imp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent i = new Intent(context, DetailMovActivity.class);
+                Bundle b = new Bundle();
+                b.putString("ID_ULT_MOV", String.valueOf(DB_WR.get_id_ult_mov()));
+                i.putExtras(b);
+
+                startActivity(i);
+            }
+        });
+
+
 
         // Boto eliminar últim moviment
         final Button boto_del_last = (Button)findViewById(R.id.button_del_last);
@@ -122,10 +156,10 @@ public class MainActivity extends AppCompatActivity {
     // Afegir nova operació
     boolean createNewOp(String str_import, String sign_import, String descripcio) {
 
-        double import_num = convertImportStr(str_import, sign_import);
+        double import_num = DB_WR.insert_new_mov(str_import, sign_import, descripcio);
 
         if (import_num != 0) {
-            double saldo_act = DB_WR.insert_new_mov(import_num, descripcio);
+            double saldo_act = DB_WR.get_saldo();
             mostrarSaldoAct(saldo_act);
             mostrarUltMov();
             mostrar_avis("S'han pagat " + editarImport(import_num) + " €");
@@ -161,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
         id_label_info_last_imp.setText(ult_mov[0]);
         id_label_info_last_date.setText(ult_mov[1]);
         if (ult_mov[2] == "-") {   id_label_info_last_imp.setTextColor(getResources().getColor(R.color.colorImpNeg)); }
-        else {                      id_label_info_last_imp.setTextColor(getResources().getColor(R.color.colorImpPos)); }
+        else {                     id_label_info_last_imp.setTextColor(getResources().getColor(R.color.colorImpPos)); }
     }
 
 
@@ -173,33 +207,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // Test corret import string
-    double convertImportStr(String str_import, String sign_import) {
 
-        String str_import_ok = str_import.replace(",", ".");
-        if (str_import_ok == "") { str_import_ok = "0"; }
-
-        // Comprovar que el string no conté caràcters invàlids
-        if (str_import_ok.replace(".", "")
-                .replace("1", "")
-                .replace("2", "")
-                .replace("3", "")
-                .replace("4", "")
-                .replace("5", "")
-                .replace("6", "")
-                .replace("7", "")
-                .replace("8", "")
-                .replace("9", "")
-                .replace("0", "") != "") { return 0; }
-        Log.i(LOGTAG, "str_import_ok = " + str_import_ok);
-
-        double import_mov = Double.parseDouble(str_import_ok);
-        double import_mov_ok = (double) Math.round(import_mov * 100) / 100;
-        if (sign_import == "-") { import_mov_ok = -import_mov_ok; }
-        Log.i(LOGTAG, "import_mov_ok = " + String.valueOf(import_mov_ok));
-
-        return import_mov_ok;
-    }
 
 
 

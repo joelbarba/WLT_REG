@@ -1,12 +1,16 @@
 package barba.joel.wlt_reg;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 public class ListMovsActivity extends AppCompatActivity {
 
@@ -31,13 +35,28 @@ public class ListMovsActivity extends AppCompatActivity {
 */
 
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-                android.R.layout.simple_list_item_1,
+                android.R.layout.simple_list_item_2,
                 DB_WR.get_llista_moviments(),
-                new String[] { "descripcio" },
-                new int[] { android.R.id.text1 },
-                0);
+                new String[] { "info1", "info2" },
+                new int[] { android.R.id.text1, android.R.id.text2 });
         llista.setAdapter(adapter);
 
+        llista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                Intent i = new Intent(context, DetailMovActivity.class);
+                startActivity(i);
+
+            }
+        });
+
+
+
+    }
+
+    private void mostrar_avis(String text){
+        Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+        toast.show();
     }
 }
