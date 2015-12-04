@@ -2,6 +2,7 @@ package barba.joel.wlt_reg;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -54,10 +55,10 @@ public class DetailMovActivity extends AppCompatActivity {
         input_import_mov.setText(this.mov.import_editat);
         if (this.mov.signe == "-")  {
             toggle_import_sign.setChecked(true);
-            input_import_mov.setTextColor(getResources().getColor(R.color.colorImpNeg));
+            input_import_mov.setTextColor(ContextCompat.getColor(context, R.color.colorImpNeg));
         } else {
             toggle_import_sign.setChecked(false);
-            input_import_mov.setTextColor(getResources().getColor(R.color.colorImpPos));
+            input_import_mov.setTextColor(ContextCompat.getColor(context, R.color.colorImpPos));
         }
 
 
@@ -70,9 +71,9 @@ public class DetailMovActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (toggle_import_sign.isChecked())  {
-                    input_import_mov.setTextColor(getResources().getColor(R.color.colorImpNeg));
+                    input_import_mov.setTextColor(ContextCompat.getColor(context, R.color.colorImpNeg));
                 } else {
-                    input_import_mov.setTextColor(getResources().getColor(R.color.colorImpPos));
+                    input_import_mov.setTextColor(ContextCompat.getColor(context, R.color.colorImpPos));
                 }
             }
         });
@@ -110,6 +111,13 @@ public class DetailMovActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DB_WR.close();
+    }
+
 
     private void mostrar_avis(String text){
         Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);

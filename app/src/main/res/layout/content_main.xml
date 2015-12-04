@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:text="Add input"
         android:id="@+id/button_add_in"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="17dp"
         android:textSize="20dp"
         android:height="60dp"
         android:layout_below="@+id/label_saldo"
@@ -65,14 +65,14 @@
         android:inputType="number|numberDecimal"
         android:ems="10"
         android:id="@+id/edit_new_input"
-        android:layout_marginTop="35dp"
         android:text=""
         android:textSize="50dp"
         android:textAlignment="textEnd"
+        android:digits="0123456789,"
         android:layout_below="@+id/button_add_in"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:digits="0123456789," />
+        android:layout_marginTop="30dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -132,5 +132,15 @@
         android:layout_below="@+id/id_label_info_last_imp"
         android:layout_alignRight="@+id/id_label_info_last_imp"
         android:layout_alignEnd="@+id/id_label_info_last_imp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show movement list"
+        android:id="@+id/button_llista"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:textSize="20dp" />
 
 </RelativeLayout>

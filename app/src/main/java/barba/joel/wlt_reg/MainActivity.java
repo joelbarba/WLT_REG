@@ -32,6 +32,11 @@ public class MainActivity extends AppCompatActivity {
         mostrarUltMov();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DB_WR.close();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +51,11 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                mostrar_avis(String.valueOf(item.getItemId()));
-                switch (item.getItemId()) { // Opció per saltar a la pantalla llista de moviments
-                    case R.id.mov_list_show:
-                        Intent i = new Intent(context, ListMovsActivity.class);
-                        startActivity(i);
+                switch (item.getItemId()) {
+
+                    // Pantalla de configuració
+                    case R.id.action_settings:  startActivity(new Intent(context, SettingsActivity.class)); break;
+                    case R.id.mov_list_show:    saltar_llista_movs();  break;      // Pantalla llista de moviments
                 }
                 return true;
             }
@@ -73,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
         final EditText edit_import_operacio = (EditText)findViewById(R.id.edit_new_input);
         final Button boto_in = (Button)findViewById(R.id.button_add_in);
         final Button boto_out = (Button)findViewById(R.id.button_add_out);
+
+
 
 
         boto_in.setOnClickListener(new View.OnClickListener() {
@@ -98,13 +105,7 @@ public class MainActivity extends AppCompatActivity {
         id_label_info_last_imp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent i = new Intent(context, DetailMovActivity.class);
-                Bundle b = new Bundle();
-                b.putString("ID_ULT_MOV", String.valueOf(DB_WR.get_id_ult_mov()));
-                i.putExtras(b);
-
-                startActivity(i);
+                saltar_ult_mov();
             }
         });
 
@@ -131,7 +132,9 @@ public class MainActivity extends AppCompatActivity {
                             }
                         })
                         .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) { dialog.cancel(); }
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
                         });
 
                 AlertDialog alertDialog = alertDialogBuilder.create();  // create alert dialog
@@ -145,13 +148,44 @@ public class MainActivity extends AppCompatActivity {
         boto_mod_last.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // DB_WR.close();
-                Intent i = new Intent(context, ListMovsActivity.class);
-                startActivity(i);
+                saltar_ult_mov();
             }
         });
 
+        // Label saldo
+        final TextView label_saldo = (TextView) findViewById(R.id.label_saldo);
+        label_saldo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saltar_ult_mov();
+            }
+        });
+
+        // Boto modificar últim moviment
+        final Button button_llista = (Button)findViewById(R.id.button_llista);
+        button_llista.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saltar_llista_movs();
+            }
+        });
+
+
     }
+
+    private void saltar_llista_movs() {
+        Intent i = new Intent(context, ListMovsActivity.class);
+        startActivity(i);
+    }
+
+    private void saltar_ult_mov() {
+        Intent i = new Intent(context, DetailMovActivity.class);
+        Bundle b = new Bundle();
+        b.putString("ID_ULT_MOV", String.valueOf(DB_WR.get_id_ult_mov()));
+        i.putExtras(b);
+        startActivity(i);
+    }
+
 
     // Afegir nova operació
     boolean createNewOp(String str_import, String sign_import, String descripcio) {

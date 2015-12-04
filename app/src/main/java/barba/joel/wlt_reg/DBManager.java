@@ -198,8 +198,8 @@ public class DBManager {
     // Retorna tots els moviments
     public Cursor get_llista_moviments() {
         return db.rawQuery("select id_mov as _id, " +
-                "import || ' €'     as info1, " +
-                "data_mov           as info2 " +
+                "import || ' € : ' || descripcio    as info1, " +
+                "data_mov                           as info2 " +
                 " from MOVIMENTS order by id_mov desc", null);
     }
 

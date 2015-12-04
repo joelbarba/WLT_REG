@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ListMovsActivity" />
-        <activity android:name=".DetailMovActivity"></activity>
+        <activity android:name=".DetailMovActivity" />
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>

@@ -45,14 +45,22 @@ public class ListMovsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                // Enllaçar amb la pantalla de detall del moviment
                 Intent i = new Intent(context, DetailMovActivity.class);
-                startActivity(i);
+                Bundle b = new Bundle();
+                b.putString("ID_ULT_MOV", String.valueOf(id));
+                i.putExtras(b);
 
+                startActivity(i);
             }
         });
 
+    }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DB_WR.close();
     }
 
     private void mostrar_avis(String text){
