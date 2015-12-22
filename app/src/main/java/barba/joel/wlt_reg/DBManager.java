@@ -163,6 +163,22 @@ public class DBManager {
 
     }
 
+    // Eliminar moviment
+    public void eliminar_mov(C_Moviment mov) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        db.execSQL("delete from MOVIMENTS where id_mov = " + String.valueOf(mov.id_mov));
+        db.execSQL("update MOVIMENTS " +
+                "      set saldo_post = import  " +
+                "                     + ifnull((select t2.saldo_post " +
+                "                                 from MOVIMENTS t2 " +
+                "                                where t2.id_mov < MOVIMENTS.id_mov " +
+                "                                order by t2.data_mov desc, t2.id_mov desc limit 1), 0) " +
+                "where data_mov >= '" + dateFormat.format(mov.data_mov) + "' ");
+        db.execSQL("delete from SALDO_ACT");
+        db.execSQL("insert into SALDO_ACT (id_ult_mov, saldo)  select id_mov, saldo_post from MOVIMENTS  where id_mov = (select max(id_mov) from MOVIMENTS)");
+    }
+
 
     // Eliminar l'últim moviment
     public boolean eliminar_ult_mov() {

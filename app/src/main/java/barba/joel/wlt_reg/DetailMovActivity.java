@@ -91,12 +91,12 @@ public class DetailMovActivity extends AppCompatActivity {
                 alertDialogBuilder.setTitle("Atenció");
 
                 alertDialogBuilder
-                        .setMessage("Estas segur que vols eliminar la última operació?")
+                        .setMessage("Estas segur que vols eliminar aquesta operació?")
                         .setCancelable(true)
                         .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
                                 // Confirmació possitiva
-                                DB_WR.eliminar_ult_mov();
+                                DB_WR.eliminar_mov(mov);
                                 finish();
                             }
                         })
