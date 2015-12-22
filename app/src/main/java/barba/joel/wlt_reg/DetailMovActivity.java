@@ -1,6 +1,8 @@
 package barba.joel.wlt_reg;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -85,7 +87,28 @@ public class DetailMovActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                finish();
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                alertDialogBuilder.setTitle("Atenció");
+
+                alertDialogBuilder
+                        .setMessage("Estas segur que vols eliminar la última operació?")
+                        .setCancelable(true)
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                // Confirmació possitiva
+                                DB_WR.eliminar_ult_mov();
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();  // create alert dialog
+                alertDialog.show();     // show it
+
             }
         });
 
@@ -109,6 +132,9 @@ public class DetailMovActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        input_desc_mov.requestFocus();    // Focus al input text de la descripció
 
     }
 

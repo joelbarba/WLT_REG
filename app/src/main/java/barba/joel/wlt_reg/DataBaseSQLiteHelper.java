@@ -3,7 +3,7 @@ package barba.joel.wlt_reg;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.Toast;
+
 
 public class DataBaseSQLiteHelper extends SQLiteOpenHelper {
 
@@ -70,4 +70,8 @@ public class DataBaseSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(sent_create_trigger2);
 
     }
+
+
+
+
 }

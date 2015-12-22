@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Current wallet amount:"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:id="@+id/textView2" />
 
     <TextView
@@ -36,28 +36,44 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="20dp" />
 
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add input"
-        android:id="@+id/button_add_in"
-        android:layout_marginTop="17dp"
-        android:textSize="20dp"
-        android:height="60dp"
+        android:orientation="vertical"
         android:layout_below="@+id/label_saldo"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:weightSum="2"
+        android:id="@+id/linearLayout1">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add output"
-        android:id="@+id/button_add_out"
-        android:textSize="20dp"
-        android:height="60dp"
-        android:layout_alignTop="@+id/button_add_in"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Add input"
+                android:textSize="20dp"
+                android:id="@+id/button_add_in"
+                android:height="70dp"
+                android:layout_margin="20px" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Add output"
+                android:textSize="20dp"
+                android:id="@+id/button_add_out"
+                android:height="70dp"
+                android:layout_margin="20px" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
 
     <EditText
         android:layout_width="wrap_content"
@@ -69,10 +85,11 @@
         android:textSize="50dp"
         android:textAlignment="textEnd"
         android:digits="0123456789,"
-        android:layout_below="@+id/button_add_in"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/linearLayout1"
+        android:selectAllOnFocus="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -82,11 +99,9 @@
         android:layout_marginTop="35dp"
         android:textSize="30dp"
         android:textColor="#ff0000"
-        android:layout_marginRight="20dp"
-        android:layout_marginEnd="20dp"
         android:layout_below="@+id/edit_new_input"
-        android:layout_toLeftOf="@+id/button_add_out"
-        android:layout_toStartOf="@+id/button_add_out" />
+        android:layout_alignRight="@+id/id_label_info_last_date"
+        android:layout_alignEnd="@+id/id_label_info_last_date" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -130,8 +145,8 @@
         android:textSize="18dp"
         android:textColor="#23238a"
         android:layout_below="@+id/id_label_info_last_imp"
-        android:layout_alignRight="@+id/id_label_info_last_imp"
-        android:layout_alignEnd="@+id/id_label_info_last_imp" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="match_parent"
@@ -142,5 +157,18 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
         android:textSize="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="beers"
+        android:id="@+id/id_label_info_last_desc"
+        android:textSize="15dp"
+        android:textColor="#7e7e7e"
+        android:layout_below="@+id/id_label_info_last_date"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/boto_mod_last"
+        android:layout_alignEnd="@+id/boto_mod_last" />
 
 </RelativeLayout>

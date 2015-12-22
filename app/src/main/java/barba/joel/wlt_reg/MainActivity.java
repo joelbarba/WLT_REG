@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -75,9 +76,19 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Instanciar els controls
-        final EditText edit_import_operacio = (EditText)findViewById(R.id.edit_new_input);
+        final EditText edit_new_input = (EditText)findViewById(R.id.edit_new_input);
         final Button boto_in = (Button)findViewById(R.id.button_add_in);
         final Button boto_out = (Button)findViewById(R.id.button_add_out);
+
+
+        edit_new_input.setOnKeyListener(new EditText.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // mostrar_avis("key = " + String.valueOf(keyCode));
+                if (keyCode == 66) boto_out.callOnClick();
+                return false;
+            }
+        });
+
 
 
 
@@ -85,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
         boto_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewOp(edit_import_operacio.getText().toString(), "", "");
-                // double import_num = convertImportStr(edit_import_operacio.getText().toString(), "");
+                createNewOp(edit_new_input.getText().toString(), "", "");
+                // double import_num = convertImportStr(edit_new_input.getText().toString(), "");
                 // mostrarSaldoAct(import_num);
             }
         });
@@ -94,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         boto_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewOp(edit_import_operacio.getText().toString(), "-", "");
+                createNewOp(edit_new_input.getText().toString(), "-", "");
             }
         });
 
@@ -188,36 +199,34 @@ public class MainActivity extends AppCompatActivity {
 
 
     // Afegir nova operació
-    boolean createNewOp(String str_import, String sign_import, String descripcio) {
+    void createNewOp(String str_import, String sign_import, String descripcio) {
 
         double import_num = DB_WR.insert_new_mov(str_import, sign_import, descripcio);
 
         if (import_num != 0) {
-            double saldo_act = DB_WR.get_saldo();
-            mostrarSaldoAct(saldo_act);
+            mostrarSaldoAct(DB_WR.get_saldo());
             mostrarUltMov();
-            mostrar_avis("S'han pagat " + editarImport(import_num) + " €");
-            iniInputsOp();
+            if (import_num > 0) mostrar_avis("S'han pagat " + editarImport(import_num) + " €");
+            else                mostrar_avis("S'han afegit " + editarImport(import_num) + " €");
+
+            // Inicialitzar valors dels inputs
+            final EditText edit_new_input = (EditText)findViewById(R.id.edit_new_input);
+            edit_new_input.setText("");
+
+            saltar_ult_mov();   // Enllaçar pantalla detall moviment
+        } else {
+            final EditText edit_new_input = (EditText) findViewById (R.id.edit_new_input);
+            edit_new_input.requestFocus();
         }
-        return true;
+
+
     }
 
-
-    // Inicialitzar valors dels inputs
-    boolean iniInputsOp() {
-        final EditText edit_import_operacio = (EditText)findViewById(R.id.edit_new_input);
-        edit_import_operacio.setText("");
-
-        return true;
-    }
 
 
     // Mostrar el saldo actual editat al Text View principal
     private void mostrarSaldoAct(double saldo) {
         TextView etq_saldo = (TextView)findViewById(R.id.label_saldo);
-        // DecimalFormat twoDForm = new DecimalFormat("0.00");
-        // String import_num_ok = String.valueOf(twoDForm.format(saldo));
-        // etq_saldo.setText(import_num_ok.replace(".", ",") + " €");
         etq_saldo.setText(editarImport(saldo));
     }
 
@@ -225,9 +234,12 @@ public class MainActivity extends AppCompatActivity {
         String ult_mov[] = DB_WR.get_last_mov_info();
         TextView id_label_info_last_imp = (TextView)findViewById(R.id.id_label_info_last_imp);
         TextView id_label_info_last_date = (TextView)findViewById(R.id.id_label_info_last_date);
+        TextView id_label_info_last_desc = (TextView)findViewById(R.id.id_label_info_last_desc);
+
 
         id_label_info_last_imp.setText(ult_mov[0]);
         id_label_info_last_date.setText(ult_mov[1]);
+        id_label_info_last_desc.setText(ult_mov[3]);
         if (ult_mov[2] == "-") {   id_label_info_last_imp.setTextColor(getResources().getColor(R.color.colorImpNeg)); }
         else {                     id_label_info_last_imp.setTextColor(getResources().getColor(R.color.colorImpPos)); }
     }

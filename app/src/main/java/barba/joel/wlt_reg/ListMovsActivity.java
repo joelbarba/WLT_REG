@@ -58,6 +58,18 @@ public class ListMovsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        ListView llista = (ListView)findViewById(R.id.llista_moviments_view);
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+                android.R.layout.simple_list_item_2,
+                DB_WR.get_llista_moviments(),
+                new String[] { "info1", "info2" },
+                new int[] { android.R.id.text1, android.R.id.text2 });
+        llista.setAdapter(adapter);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         DB_WR.close();

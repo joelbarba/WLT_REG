@@ -4,9 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-import android.widget.Toast;
-
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -65,21 +62,23 @@ public class DBManager {
         return ult_mov;
     }
 
-    // Retorna info del últim moviment editada. 0=>Import editat, 1=>Data editada, 2=>Signe
+    // Retorna info del últim moviment editada. 0=>Import editat, 1=>Data editada, 2=>Signe,  3=>descripció
     public String[] get_last_mov_info() {
         double import_mov = 0;
         String date_mov = "";
+        String descripcio = "";
 
-        Cursor F_cursor = db.rawQuery("select import, data_mov from MOVIMENTS where id_mov = (select id_ult_mov from SALDO_ACT)", null);
+        Cursor F_cursor = db.rawQuery("select import, data_mov, descripcio from MOVIMENTS where id_mov = (select id_ult_mov from SALDO_ACT)", null);
         if (F_cursor.moveToFirst()) {
             import_mov  = F_cursor.getDouble(0);
             date_mov    = F_cursor.getString(1);
+            descripcio    = F_cursor.getString(2);
         }
         F_cursor.close();
 
         String signe = "";
         if (import_mov < 0) { signe = "-"; }
-        return new String[] { editarImport(import_mov), date_mov, signe };
+        return new String[] { editarImport(import_mov), date_mov, signe, descripcio };
     }
 
     // Retorna info del moviment.
@@ -111,7 +110,7 @@ public class DBManager {
     }
 
 
-    // Retorna info del moviment.
+    // Actualitza el moviment.
     public boolean set_mov_DB(C_Moviment mov) {
 
         double mov_import = convertImportStr(mov.import_editat, mov.signe);
@@ -123,6 +122,8 @@ public class DBManager {
 //                " data_mov = null, " +
 //                " geoposicio = '' " +
                 " where id_mov = " + mov.id_mov);
+
+        update_saldo_post_all(mov.id_mov);
 
         return true;
     }
@@ -147,6 +148,16 @@ public class DBManager {
             // newRow.put("geoposicio",    "xxxxxx");
             newRow.put("saldo_post", String.valueOf(saldo_post)); //
             db.insert("MOVIMENTS", null, newRow);
+            // Si hi ha moviments posteriors, actualitzar saldo post
+            db.execSQL("update MOVIMENTS " +
+                    "      set saldo_post = import  " +
+                    "                     + ifnull((select t2.saldo_post " +
+                    "                                 from MOVIMENTS t2 " +
+                    "                                where t2.id_mov < MOVIMENTS.id_mov " +
+                    "                                order by t2.data_mov desc, t2.id_mov desc limit 1), 0) " +
+                    "where data_mov >= '" + dateFormat.format(date) + "' ");
+            db.execSQL("delete from SALDO_ACT");
+            db.execSQL("insert into SALDO_ACT (id_ult_mov, saldo)  select id_mov, saldo_post from MOVIMENTS  where id_mov = (select max(id_mov) from MOVIMENTS)");
         }
         return mov_import;
 
@@ -202,6 +213,33 @@ public class DBManager {
                 "data_mov                           as info2 " +
                 " from MOVIMENTS order by id_mov desc", null);
     }
+
+    // Retorna tots els moviments
+    public Cursor get_llista_moviments_cvs() {
+        return db.rawQuery("select id_mov " +
+                "       || ';' ||  ifnull(import, '') " +
+                "       || ';' ||  ifnull(descripcio, '') " +
+                "       || ';' ||  ifnull(data_mov, '') " +
+                "       || ';' ||  ifnull(geoposicio, '') " +
+                "       || ';' ||  ifnull(saldo_post, '') as linia " +
+                "  from MOVIMENTS " +
+                " order by id_mov", null);
+    }
+
+    public void update_saldo_post_all(int id_mov) {
+        db.execSQL("update MOVIMENTS " +
+                "      set saldo_post = import  " +
+                "                     + ifnull((select t2.saldo_post " +
+                "                                 from MOVIMENTS t2 " +
+                "                                where t2.id_mov < MOVIMENTS.id_mov " +
+                "                                order by t2.data_mov desc, t2.id_mov desc limit 1), 0) " +
+                "where data_mov >= (select data_mov from MOVIMENTS where id_mov >= " + String.valueOf(id_mov) + " limit 1)");
+        db.execSQL("delete from SALDO_ACT");
+        db.execSQL("insert into SALDO_ACT (id_ult_mov, saldo)  select id_mov, saldo_post from MOVIMENTS  where id_mov = (select max(id_mov) from MOVIMENTS)");
+
+
+    }
+
 
 
 }
