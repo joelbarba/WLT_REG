@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         boto_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewOp(edit_new_input.getText().toString(), "", "");
+                createNewOp(edit_new_input.getText().toString(), "", "efectiu caixa");
                 // double import_num = convertImportStr(edit_new_input.getText().toString(), "");
                 // mostrarSaldoAct(import_num);
             }
@@ -239,9 +240,9 @@ public class MainActivity extends AppCompatActivity {
 
         id_label_info_last_imp.setText(ult_mov[0]);
         id_label_info_last_date.setText(ult_mov[1]);
-        id_label_info_last_desc.setText(ult_mov[3]);
-        if (ult_mov[2] == "-") {   id_label_info_last_imp.setTextColor(getResources().getColor(R.color.colorImpNeg)); }
-        else {                     id_label_info_last_imp.setTextColor(getResources().getColor(R.color.colorImpPos)); }
+        id_label_info_last_desc.setText(ult_mov[3] + " €");
+        if (ult_mov[2] == "-") {   id_label_info_last_imp.setTextColor(ContextCompat.getColor(context, R.color.colorImpNeg)); }
+        else {                     id_label_info_last_imp.setTextColor(ContextCompat.getColor(context, R.color.colorImpPos)); }
     }
 
 

@@ -216,7 +216,7 @@ public class DBManager {
     }
 
     // Convertir double a format String amb 2 decimals fixos
-    String editarImport(double import_num) {
+    public String editarImport(double import_num) {
         DecimalFormat twoDForm = new DecimalFormat("0.00");
         String import_num_ok = String.valueOf(twoDForm.format(import_num));
         return import_num_ok.replace(".", ",");
@@ -224,10 +224,15 @@ public class DBManager {
 
     // Retorna tots els moviments
     public Cursor get_llista_moviments() {
+        return db.rawQuery("select id_mov as _id, import, descripcio, data_mov, geoposicio, saldo_post "
+                + " from MOVIMENTS order by id_mov desc", null);
+
+        /*
         return db.rawQuery("select id_mov as _id, " +
                 "import || ' € : ' || descripcio    as info1, " +
                 "data_mov                           as info2 " +
                 " from MOVIMENTS order by id_mov desc", null);
+                */
     }
 
     // Retorna tots els moviments
