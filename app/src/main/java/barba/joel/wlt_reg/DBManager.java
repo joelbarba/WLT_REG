@@ -243,31 +243,37 @@ public class DBManager {
                 */
     }
 
+    // Retorna el ID_MOV del últim moviment de la pàgina
+    public int get_last_ofset(int id_mov_ofset, int window_count) {
+        int last_ofset_cur_pag = id_mov_ofset;
+
+        String sent = "select id_mov from (" +
+                "           select id_mov from MOVIMENTS where id_mov <= " + String.valueOf(id_mov_ofset) +
+                "           order by id_mov desc limit " + String.valueOf(window_count) +
+                ") order by id_mov limit 1";
+
+        Cursor F_cursor = db.rawQuery(sent, null);
+        if (F_cursor.moveToFirst()) last_ofset_cur_pag  = F_cursor.getInt(0);
+        F_cursor.close();
+        return last_ofset_cur_pag;
+    }
+
     // Retorna el ID_MOV del primer moviment (ordre invers) per la pàgina anterior
     public int get_next_ofset(int id_mov_ofset, int window_count) {
         int next_ofset = id_mov_ofset;
-        int last_curr_el = 0;
+        int last_ofset_cur_pag = get_last_ofset(id_mov_ofset, window_count);
 
         String sent = "select id_mov from (" +
-                      " select id_mov from MOVIMENTS where id_mov < " + String.valueOf(id_mov_ofset) +
-                      " order by id_mov desc limit " + String.valueOf(window_count) +
+                      "         select id_mov from MOVIMENTS where id_mov < " + String.valueOf(id_mov_ofset) +
+                      "         order by id_mov desc limit " + String.valueOf(window_count) +
                       ") order by id_mov limit 1";
 
         Cursor F_cursor = db.rawQuery(sent, null);
         if (F_cursor.moveToFirst()) next_ofset  = F_cursor.getInt(0);
         F_cursor.close();
 
-        sent = "select id_mov from (" +
-                " select id_mov from MOVIMENTS where id_mov <= " + String.valueOf(id_mov_ofset) +
-                " order by id_mov desc limit " + String.valueOf(window_count) +
-                ") order by id_mov limit 1";
-
-        F_cursor = db.rawQuery(sent, null);
-        if (F_cursor.moveToFirst()) last_curr_el  = F_cursor.getInt(0);
-        F_cursor.close();
-
-        if (last_curr_el == next_ofset) next_ofset = -1;    // última pàgina
-
+        // Si l'últim id de la pàgina és igual al primer de la pàgina següent, és la última pàgina
+        if (last_ofset_cur_pag == next_ofset) next_ofset = -1;
 
         return next_ofset;
     }
@@ -277,8 +283,8 @@ public class DBManager {
         int next_ofset = id_mov_ofset;
 
         String sent = "select id_mov from (" +
-                " select id_mov from MOVIMENTS where id_mov > " + String.valueOf(id_mov_ofset) +
-                " order by id_mov limit " + String.valueOf(window_count) +
+                "           select id_mov from MOVIMENTS where id_mov > " + String.valueOf(id_mov_ofset) +
+                "           order by id_mov limit " + String.valueOf(window_count) +
                 ") order by id_mov desc limit 1";
 
         Cursor F_cursor = db.rawQuery(sent, null);
@@ -289,6 +295,32 @@ public class DBManager {
 
         return next_ofset;
     }
+
+    // Retorna el total de pàgines i la pàgina actual
+    public int[] get_pag_info(int id_mov_ofset, int window_count) {
+        int current_pag = 0;
+        int total_pags = 0;
+
+        String sent = "select case (val_cur) when trunc_val_cur then trunc_val_cur else trunc_val_cur + 1 end, " +
+                "       case (val_tot) when trunc_val_tot then trunc_val_tot else trunc_val_tot + 1 end " +
+                "from ( " +
+                "select count(*) / round(t2.window) as val_tot, " +
+                "       cast(count(*) / round(t2.window) as integer) as trunc_val_tot, " +
+                "       count(case when (id_mov >= t2.cur_id) then 1 else null end) / round(t2.window) as val_cur, " +
+                "       cast(count(case when (id_mov >= t2.cur_id) then 1 else null end) / round(t2.window) as integer) as trunc_val_cur " +
+                "from MOVIMENTS, " +
+                "(select " + String.valueOf(id_mov_ofset) + " as cur_id, " + String.valueOf(window_count) + " as window) as t2)";
+
+        Cursor F_cursor = db.rawQuery(sent, null);
+        if (F_cursor.moveToFirst()) {
+            current_pag = F_cursor.getInt(0);
+            total_pags = F_cursor.getInt(1);
+        }
+        F_cursor.close();
+
+        return new int[] { current_pag, total_pags };
+    }
+
 
 
     // Retorna tots els moviments

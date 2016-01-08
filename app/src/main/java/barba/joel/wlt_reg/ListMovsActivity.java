@@ -37,7 +37,7 @@ public class ListMovsActivity extends AppCompatActivity {
     public int id_mov_ofset = 0;
     public int id_next_ofset = 0;
     public int id_prev_ofset = 0;
-    public int window_count = 80;
+    public int window_count = 100;
 
     public C_List_Mov_Adapter adp;
 
@@ -130,18 +130,32 @@ public class ListMovsActivity extends AppCompatActivity {
         adp.llista_movs = new ArrayList<C_Moviment>(llista_movs);
 
         // Actualitzar botons paginació
-        final Button id_button_next = (Button)findViewById(R.id.id_button_next);
-        final Button id_button_prev = (Button)findViewById(R.id.id_button_prev);
+        final Button id_button_next = (Button) findViewById(R.id.id_button_next);
+        final Button id_button_prev = (Button) findViewById(R.id.id_button_prev);
+        final TextView id_titol_llista_movs = (TextView) findViewById(R.id.id_titol_llista_movs);
         id_mov_ofset = llista_movs.get(0).id_mov;
         id_next_ofset = DB_WR.get_next_ofset(id_mov_ofset, window_count);
         id_prev_ofset = DB_WR.get_prev_ofset(id_mov_ofset, window_count);
 
+        if ((id_next_ofset == -1) && (id_prev_ofset == -1)) {
+            id_button_next.setVisibility(View.INVISIBLE);
+            id_button_prev.setVisibility(View.INVISIBLE);
 
-        if (llista_movs.size() < window_count) id_next_ofset = -1;    // última pàgina
+        } else {
+            id_button_next.setVisibility(View.VISIBLE);
+            id_button_prev.setVisibility(View.VISIBLE);
 
-        id_button_next.setEnabled((id_next_ofset != -1));
-        id_button_prev.setEnabled((id_prev_ofset != -1));
-        mostrar_avis("id_mov_ofset = " + id_mov_ofset + ", id_next_ofset = " + id_next_ofset + ", id_prev_ofset = " + id_prev_ofset);
+            id_button_next.setEnabled((id_next_ofset != -1));
+            id_button_prev.setEnabled((id_prev_ofset != -1));
+
+            int[] info_pag = DB_WR.get_pag_info(id_mov_ofset, window_count);
+            id_titol_llista_movs.setText("Movements list (" + String.valueOf(info_pag[0]) + "/" + String.valueOf(info_pag[1]) + ")");
+
+        }
+
+
+
+//        mostrar_avis("id_mov_ofset = " + id_mov_ofset + ", id_next_ofset = " + id_next_ofset + ", id_prev_ofset = " + id_prev_ofset);
     }
 
     private void saltar_pagina(int new_ofset) {
@@ -160,7 +174,7 @@ public class ListMovsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        carregar_llista();
+        carregar_llista();
 //        final ListView llista = (ListView) findViewById(R.id.llista_moviments_view);
 //        C_List_Mov_Adapter adp = new C_List_Mov_Adapter(this, llista_movs);
 //        llista.setAdapter(adp);

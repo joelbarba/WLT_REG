@@ -33,7 +33,8 @@
             android:text="Movements list"
             android:layout_alignBaseline="@+id/id_button_prev"
             android:layout_alignBottom="@+id/id_button_prev"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:id="@+id/id_titol_llista_movs" />
 
         <Button
             android:layout_width="wrap_content"
