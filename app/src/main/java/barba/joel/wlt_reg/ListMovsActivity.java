@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -31,7 +32,14 @@ public class ListMovsActivity extends AppCompatActivity {
     private DBManager DB_WR = null;
     final Context context = this;
     private static final String LOGTAG = "ListMovsActivity";
-    public List<C_Moviment> llista_movs;
+
+
+    public int id_mov_ofset = 0;
+    public int id_next_ofset = 0;
+    public int id_prev_ofset = 0;
+    public int window_count = 80;
+
+    public C_List_Mov_Adapter adp;
 
 
     @Override
@@ -44,10 +52,7 @@ public class ListMovsActivity extends AppCompatActivity {
 
         carregar_llista();
 
-        final ListView llista = (ListView) findViewById(R.id.llista_moviments_view);
-        C_List_Mov_Adapter adp = new C_List_Mov_Adapter(this, llista_movs);
-        llista.setAdapter(adp);
-
+        ListView llista = (ListView) findViewById(R.id.llista_moviments_view);
         llista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -63,13 +68,37 @@ public class ListMovsActivity extends AppCompatActivity {
             }
         });
 
+
+
+        // Boto pàgina següent
+        final Button id_button_next = (Button)findViewById(R.id.id_button_next);
+        id_button_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saltar_pagina(id_next_ofset);
+            }
+        });
+
+        // Boto pàgina anterior
+        final Button id_button_prev = (Button)findViewById(R.id.id_button_prev);
+        id_button_prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saltar_pagina(id_prev_ofset);
+            }
+        });
+
     }
 
-    void carregar_llista() {
+    public void carregar_llista() {
 
-        this.llista_movs = new ArrayList<C_Moviment>();
+        List<C_Moviment> llista_movs = new ArrayList<C_Moviment>();
 
-        Cursor F_cursor = DB_WR.get_llista_moviments();
+        adp = new C_List_Mov_Adapter(this, llista_movs);
+        ListView llista = (ListView) findViewById(R.id.llista_moviments_view);
+        llista.setAdapter(adp);
+
+        Cursor F_cursor = DB_WR.get_llista_moviments(id_mov_ofset, window_count);
         if (F_cursor.moveToFirst()) {
             do {
                 C_Moviment mov = new C_Moviment();
@@ -98,16 +127,43 @@ public class ListMovsActivity extends AppCompatActivity {
         }
 
         F_cursor.close();
+        adp.llista_movs = new ArrayList<C_Moviment>(llista_movs);
+
+        // Actualitzar botons paginació
+        final Button id_button_next = (Button)findViewById(R.id.id_button_next);
+        final Button id_button_prev = (Button)findViewById(R.id.id_button_prev);
+        id_mov_ofset = llista_movs.get(0).id_mov;
+        id_next_ofset = DB_WR.get_next_ofset(id_mov_ofset, window_count);
+        id_prev_ofset = DB_WR.get_prev_ofset(id_mov_ofset, window_count);
+
+
+        if (llista_movs.size() < window_count) id_next_ofset = -1;    // última pàgina
+
+        id_button_next.setEnabled((id_next_ofset != -1));
+        id_button_prev.setEnabled((id_prev_ofset != -1));
+        mostrar_avis("id_mov_ofset = " + id_mov_ofset + ", id_next_ofset = " + id_next_ofset + ", id_prev_ofset = " + id_prev_ofset);
     }
+
+    private void saltar_pagina(int new_ofset) {
+        this.id_mov_ofset = new_ofset;
+        carregar_llista();
+
+        // Redraw the view
+        adp.notifyDataSetChanged();
+        ListView llista = (ListView) findViewById(R.id.llista_moviments_view);
+        llista.invalidateViews();
+        llista.refreshDrawableState();
+    }
+
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        carregar_llista();
-        final ListView llista = (ListView) findViewById(R.id.llista_moviments_view);
-        C_List_Mov_Adapter adp = new C_List_Mov_Adapter(this, llista_movs);
-        llista.setAdapter(adp);
+//        carregar_llista();
+//        final ListView llista = (ListView) findViewById(R.id.llista_moviments_view);
+//        C_List_Mov_Adapter adp = new C_List_Mov_Adapter(this, llista_movs);
+//        llista.setAdapter(adp);
     }
 
     @Override

@@ -223,9 +223,17 @@ public class DBManager {
     }
 
     // Retorna tots els moviments
-    public Cursor get_llista_moviments() {
-        return db.rawQuery("select id_mov as _id, import, descripcio, data_mov, geoposicio, saldo_post "
-                + " from MOVIMENTS order by id_mov desc", null);
+    public Cursor get_llista_moviments(int id_mov_ofset, int window_count) {
+
+        String sent = "select id_mov as _id, import, id_mov || ' - ' || descripcio, data_mov, geoposicio, saldo_post " +
+                      " from MOVIMENTS ";
+
+        if (id_mov_ofset != 0) sent += " where id_mov <= " + String.valueOf(id_mov_ofset);
+
+        sent += " order by id_mov desc " +
+                " limit " + String.valueOf(window_count);
+
+        return db.rawQuery(sent, null);
 
         /*
         return db.rawQuery("select id_mov as _id, " +
@@ -234,6 +242,54 @@ public class DBManager {
                 " from MOVIMENTS order by id_mov desc", null);
                 */
     }
+
+    // Retorna el ID_MOV del primer moviment (ordre invers) per la pàgina anterior
+    public int get_next_ofset(int id_mov_ofset, int window_count) {
+        int next_ofset = id_mov_ofset;
+        int last_curr_el = 0;
+
+        String sent = "select id_mov from (" +
+                      " select id_mov from MOVIMENTS where id_mov < " + String.valueOf(id_mov_ofset) +
+                      " order by id_mov desc limit " + String.valueOf(window_count) +
+                      ") order by id_mov limit 1";
+
+        Cursor F_cursor = db.rawQuery(sent, null);
+        if (F_cursor.moveToFirst()) next_ofset  = F_cursor.getInt(0);
+        F_cursor.close();
+
+        sent = "select id_mov from (" +
+                " select id_mov from MOVIMENTS where id_mov <= " + String.valueOf(id_mov_ofset) +
+                " order by id_mov desc limit " + String.valueOf(window_count) +
+                ") order by id_mov limit 1";
+
+        F_cursor = db.rawQuery(sent, null);
+        if (F_cursor.moveToFirst()) last_curr_el  = F_cursor.getInt(0);
+        F_cursor.close();
+
+        if (last_curr_el == next_ofset) next_ofset = -1;    // última pàgina
+
+
+        return next_ofset;
+    }
+
+    // Retorna el ID_MOV del primer moviment (ordre invers) per la pàgina anterior
+    public int get_prev_ofset(int id_mov_ofset, int window_count) {
+        int next_ofset = id_mov_ofset;
+
+        String sent = "select id_mov from (" +
+                " select id_mov from MOVIMENTS where id_mov > " + String.valueOf(id_mov_ofset) +
+                " order by id_mov limit " + String.valueOf(window_count) +
+                ") order by id_mov desc limit 1";
+
+        Cursor F_cursor = db.rawQuery(sent, null);
+        if (F_cursor.moveToFirst()) next_ofset  = F_cursor.getInt(0);
+        F_cursor.close();
+
+        if (id_mov_ofset == next_ofset) next_ofset = -1;    // primera pàgina
+
+        return next_ofset;
+    }
+
 
     // Retorna tots els moviments
     public Cursor get_llista_moviments_cvs() {
