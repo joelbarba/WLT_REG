@@ -34,7 +34,7 @@ public class ListMovsActivity extends AppCompatActivity {
     private static final String LOGTAG = "ListMovsActivity";
 
 
-    public int id_mov_ofset = 0;
+    public int id_ord_ofset = 0;
     public int id_next_ofset = 0;
     public int id_prev_ofset = 0;
     public int window_count = 100;
@@ -98,7 +98,7 @@ public class ListMovsActivity extends AppCompatActivity {
         ListView llista = (ListView) findViewById(R.id.llista_moviments_view);
         llista.setAdapter(adp);
 
-        Cursor F_cursor = DB_WR.get_llista_moviments(id_mov_ofset, window_count);
+        Cursor F_cursor = DB_WR.get_llista_moviments(id_ord_ofset, window_count);
         if (F_cursor.moveToFirst()) {
             do {
                 C_Moviment mov = new C_Moviment();
@@ -110,6 +110,7 @@ public class ListMovsActivity extends AppCompatActivity {
                 mov.data_editada    = F_cursor.getString(3);
                 mov.geopos_mov      = F_cursor.getString(4);
                 mov.saldo_post      = F_cursor.getDouble(5);
+                mov.id_ordre        = F_cursor.getInt(6);
 
                 mov.import_editat       = DB_WR.editarImport(mov.import_mov).replace("-", "");
                 mov.saldo_post_editat   = DB_WR.editarImport(mov.saldo_post);
@@ -133,9 +134,9 @@ public class ListMovsActivity extends AppCompatActivity {
         final Button id_button_next = (Button) findViewById(R.id.id_button_next);
         final Button id_button_prev = (Button) findViewById(R.id.id_button_prev);
         final TextView id_titol_llista_movs = (TextView) findViewById(R.id.id_titol_llista_movs);
-        id_mov_ofset = llista_movs.get(0).id_mov;
-        id_next_ofset = DB_WR.get_next_ofset(id_mov_ofset, window_count);
-        id_prev_ofset = DB_WR.get_prev_ofset(id_mov_ofset, window_count);
+        id_ord_ofset = llista_movs.get(0).id_ordre;
+        id_next_ofset = DB_WR.get_next_ofset(id_ord_ofset, window_count);
+        id_prev_ofset = DB_WR.get_prev_ofset(id_ord_ofset, window_count);
 
         if ((id_next_ofset == -1) && (id_prev_ofset == -1)) {
             id_button_next.setVisibility(View.INVISIBLE);
@@ -148,18 +149,18 @@ public class ListMovsActivity extends AppCompatActivity {
             id_button_next.setEnabled((id_next_ofset != -1));
             id_button_prev.setEnabled((id_prev_ofset != -1));
 
-            int[] info_pag = DB_WR.get_pag_info(id_mov_ofset, window_count);
+            int[] info_pag = DB_WR.get_pag_info(id_ord_ofset, window_count);
             id_titol_llista_movs.setText("Movements list (" + String.valueOf(info_pag[0]) + "/" + String.valueOf(info_pag[1]) + ")");
 
         }
 
 
 
-//        mostrar_avis("id_mov_ofset = " + id_mov_ofset + ", id_next_ofset = " + id_next_ofset + ", id_prev_ofset = " + id_prev_ofset);
+//        mostrar_avis("id_ord_ofset = " + id_ord_ofset + ", id_next_ofset = " + id_next_ofset + ", id_prev_ofset = " + id_prev_ofset);
     }
 
     private void saltar_pagina(int new_ofset) {
-        this.id_mov_ofset = new_ofset;
+        this.id_ord_ofset = new_ofset;
         carregar_llista();
 
         // Redraw the view

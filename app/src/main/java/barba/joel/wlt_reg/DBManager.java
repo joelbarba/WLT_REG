@@ -34,7 +34,7 @@ public class DBManager {
     public void ini_db(boolean reload) {
         if ((reload) || (db.rawQuery("select 1 from SALDO_ACT", null).getCount() == 0)) {
             db.execSQL("delete from SALDO_ACT");
-            db.execSQL("delete from MOVIMENTS");
+            // db.execSQL("delete from MOVIMENTS");
             db.execSQL("insert into SALDO_ACT (saldo) values (0)");
         }
     }
@@ -47,7 +47,8 @@ public class DBManager {
     // Retorna el saldo actual
     public double get_saldo() {
         double saldo = 0;
-        Cursor F_cursor = db.rawQuery("select saldo from SALDO_ACT", null);
+        // Cursor F_cursor = db.rawQuery("select saldo from SALDO_ACT", null);
+        Cursor F_cursor = db.rawQuery("select saldo_post from MOVIMENTS order by id_ordre desc limit 1", null);
         if (F_cursor.moveToFirst()) {   saldo = F_cursor.getDouble(0); }
         F_cursor.close();
         return saldo;
@@ -56,7 +57,8 @@ public class DBManager {
     // Retorna el id del últim moviment
     public int get_id_ult_mov() {
         int ult_mov = 0;
-        Cursor F_cursor = db.rawQuery("select id_ult_mov from SALDO_ACT", null);
+        // Cursor F_cursor = db.rawQuery("select id_ult_mov from SALDO_ACT", null);
+        Cursor F_cursor = db.rawQuery("select id_mov from MOVIMENTS order by id_ordre desc limit 1", null);
         if (F_cursor.moveToFirst()) {   ult_mov = F_cursor.getInt(0); }
         F_cursor.close();
         return ult_mov;
@@ -68,7 +70,8 @@ public class DBManager {
         String date_mov = "";
         String descripcio = "";
 
-        Cursor F_cursor = db.rawQuery("select import, data_mov, descripcio from MOVIMENTS where id_mov = (select id_ult_mov from SALDO_ACT)", null);
+//        Cursor F_cursor = db.rawQuery("select import, data_mov, descripcio from MOVIMENTS where id_mov = (select id_ult_mov from SALDO_ACT)", null);
+        Cursor F_cursor = db.rawQuery("select import, data_mov, descripcio from MOVIMENTS order by id_ordre desc limit 1", null);
         if (F_cursor.moveToFirst()) {
             import_mov  = F_cursor.getDouble(0);
             date_mov    = F_cursor.getString(1);
@@ -85,7 +88,7 @@ public class DBManager {
     public C_Moviment get_mov_info(int id_mov) {
         C_Moviment mov = new C_Moviment();
 
-        Cursor F_cursor = db.rawQuery("select id_mov, import, descripcio, data_mov, geoposicio, saldo_post from MOVIMENTS where id_mov = " + String.valueOf(id_mov), null);
+        Cursor F_cursor = db.rawQuery("select id_mov, import, descripcio, data_mov, geoposicio, saldo_post, id_ordre from MOVIMENTS where id_mov = " + String.valueOf(id_mov), null);
         if (F_cursor.moveToFirst()) {
             mov.id_mov          = id_mov;
             mov.import_mov      = F_cursor.getDouble(1);
@@ -93,6 +96,7 @@ public class DBManager {
             mov.data_editada    = F_cursor.getString(3);
             mov.geopos_mov      = F_cursor.getString(4);
             mov.saldo_post      = F_cursor.getDouble(5);
+            mov.id_ordre        = F_cursor.getInt(6);
 
             mov.import_editat       = editarImport(mov.import_mov).replace("-", "");
             mov.saldo_post_editat   = editarImport(mov.saldo_post);
@@ -114,16 +118,14 @@ public class DBManager {
     public boolean set_mov_DB(C_Moviment mov) {
 
         double mov_import = convertImportStr(mov.import_editat, mov.signe);
-
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         db.execSQL("update MOVIMENTS set " +
                 " import = " + String.valueOf(mov_import) + ", " +
-                " descripcio = '" + mov.desc_mov + "' " + // ", " +
-//                " data_mov = null, " +
+                " descripcio = '" + mov.desc_mov + "', " +
+                " data_mov = '" + dateFormat.format(mov.data_mov) + "' " +
 //                " geoposicio = '' " +
                 " where id_mov = " + mov.id_mov);
-
-        update_saldo_post_all(mov.id_mov);
 
         return true;
     }
@@ -138,28 +140,15 @@ public class DBManager {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date = new Date();
 
-            double saldo_act = get_saldo();
-            double saldo_post = (double) Math.round((saldo_act + mov_import) * 100) / 100;
-
             ContentValues newRow = new ContentValues();
             newRow.put("import", String.valueOf(mov_import));
             newRow.put("descripcio", descripcio);
             newRow.put("data_mov", dateFormat.format(date));
             // newRow.put("geoposicio",    "xxxxxx");
-            newRow.put("saldo_post", String.valueOf(saldo_post)); //
+//            newRow.put("saldo_post", String.valueOf(saldo_post));
             db.insert("MOVIMENTS", null, newRow);
-            // Si hi ha moviments posteriors, actualitzar saldo post
-            db.execSQL("update MOVIMENTS " +
-                    "      set saldo_post = import  " +
-                    "                     + ifnull((select t2.saldo_post " +
-                    "                                 from MOVIMENTS t2 " +
-                    "                                where t2.id_mov < MOVIMENTS.id_mov " +
-                    "                                order by t2.data_mov desc, t2.id_mov desc limit 1), 0) " +
-                    "where data_mov >= '" + dateFormat.format(date) + "' ");
-            db.execSQL("delete from SALDO_ACT");
-            db.execSQL("insert into SALDO_ACT (id_ult_mov, saldo)  select id_mov, saldo_post from MOVIMENTS  where id_mov = (select max(id_mov) from MOVIMENTS)");
         }
-        return mov_import;
+        return get_saldo();
 
     }
 
@@ -168,29 +157,150 @@ public class DBManager {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         db.execSQL("delete from MOVIMENTS where id_mov = " + String.valueOf(mov.id_mov));
+    }
+
+
+    // Eliminar l'últim moviment
+    public void eliminar_ult_mov() {
+
+//        db.execSQL("delete from MOVIMENTS where id_mov = (select id_ult_mov from SALDO_ACT);");
+        db.execSQL("delete from MOVIMENTS where id_mov = (select id_mov from MOVIMENTS order by id_ordre desc limit 1);");
+
+    }
+
+
+
+    // Retorna tots els moviments
+    public Cursor get_llista_moviments(int id_ord_ofset, int window_count) {
+
+        String sent = "select id_mov as _id, import, id_mov || ' - ' || id_ordre || ' - ' || descripcio, data_mov, geoposicio, saldo_post, id_ordre " +
+                      " from MOVIMENTS ";
+
+        if (id_ord_ofset != 0) sent += " where id_ordre <= " + String.valueOf(id_ord_ofset);
+
+        sent += " order by id_ordre desc " +
+                " limit " + String.valueOf(window_count);
+
+        return db.rawQuery(sent, null);
+
+        /*
+        return db.rawQuery("select id_mov as _id, " +
+                "import || ' € : ' || descripcio    as info1, " +
+                "data_mov                           as info2 " +
+                " from MOVIMENTS order by id_mov desc", null);
+                */
+    }
+
+    // Retorna el ID_MOV del últim moviment de la pàgina
+    public int get_last_ofset(int id_ord_ofset, int window_count) {
+        int last_ofset_cur_pag = id_ord_ofset;
+
+        String sent = "select id_ordre from (" +
+                "           select id_ordre from MOVIMENTS where id_ordre <= " + String.valueOf(id_ord_ofset) +
+                "           order by id_ordre desc limit " + String.valueOf(window_count) +
+                ") order by id_ordre limit 1";
+
+        Cursor F_cursor = db.rawQuery(sent, null);
+        if (F_cursor.moveToFirst()) last_ofset_cur_pag  = F_cursor.getInt(0);
+        F_cursor.close();
+        return last_ofset_cur_pag;
+    }
+
+    // Retorna el ID_MOV del primer moviment (ordre invers) per la pàgina anterior
+    public int get_next_ofset(int id_ord_ofset, int window_count) {
+        int next_ofset = id_ord_ofset;
+        int last_ofset_cur_pag = get_last_ofset(id_ord_ofset, window_count);
+
+        String sent = "select id_ordre from (" +
+                      "         select id_ordre from MOVIMENTS where id_ordre < " + String.valueOf(id_ord_ofset) +
+                      "         order by id_ordre desc limit " + String.valueOf(window_count) +
+                      ") order by id_ordre limit 1";
+
+        Cursor F_cursor = db.rawQuery(sent, null);
+        if (F_cursor.moveToFirst()) next_ofset  = F_cursor.getInt(0);
+        F_cursor.close();
+
+        // Si l'últim id de la pàgina és igual al primer de la pàgina següent, és la última pàgina
+        if (last_ofset_cur_pag == next_ofset) next_ofset = -1;
+
+        return next_ofset;
+    }
+
+
+    // Retorna el ID_MOV del primer moviment (ordre invers) per la pàgina anterior
+    public int get_prev_ofset(int id_ord_ofset, int window_count) {
+        int next_ofset = id_ord_ofset;
+
+        String sent = "select id_ordre from (" +
+                "           select id_ordre from MOVIMENTS where id_ordre > " + String.valueOf(id_ord_ofset) +
+                "           order by id_ordre limit " + String.valueOf(window_count) +
+                ") order by id_ordre desc limit 1";
+
+        Cursor F_cursor = db.rawQuery(sent, null);
+        if (F_cursor.moveToFirst()) next_ofset  = F_cursor.getInt(0);
+        F_cursor.close();
+
+        if (id_ord_ofset == next_ofset) next_ofset = -1;    // primera pàgina
+
+        return next_ofset;
+    }
+
+
+    // Retorna el total de pàgines i la pàgina actual
+    public int[] get_pag_info(int id_ord_ofset, int window_count) {
+        int current_pag = 0;
+        int total_pags = 0;
+
+        String sent = "select case (val_cur) when trunc_val_cur then trunc_val_cur else trunc_val_cur + 1 end, " +
+                "       case (val_tot) when trunc_val_tot then trunc_val_tot else trunc_val_tot + 1 end " +
+                " from ( " +
+                " select count(*) / round(t2.window) as val_tot, " +
+                "       cast(count(*) / round(t2.window) as integer) as trunc_val_tot, " +
+                "       count(case when (id_ordre >= t2.cur_id) then 1 else null end) / round(t2.window) as val_cur, " +
+                "       cast(count(case when (id_ordre >= t2.cur_id) then 1 else null end) / round(t2.window) as integer) as trunc_val_cur " +
+                " from MOVIMENTS, " +
+                " (select " + String.valueOf(id_ord_ofset) + " as cur_id, " + String.valueOf(window_count) + " as window) as t2)";
+
+        Cursor F_cursor = db.rawQuery(sent, null);
+        if (F_cursor.moveToFirst()) {
+            current_pag = F_cursor.getInt(0);
+            total_pags = F_cursor.getInt(1);
+        }
+        F_cursor.close();
+
+        return new int[] { current_pag, total_pags };
+    }
+
+
+
+    // Retorna tots els moviments
+    public Cursor get_llista_moviments_cvs() {
+        return db.rawQuery("select id_mov " +
+                "       || ';' ||  ifnull(import, '') " +
+                "       || ';' ||  ifnull(descripcio, '') " +
+                "       || ';' ||  ifnull(data_mov, '') " +
+                "       || ';' ||  ifnull(geoposicio, '') " +
+                "       || ';' ||  ifnull(saldo_post, '') as linia " +
+                "  from MOVIMENTS " +
+                " order by id_mov", null);
+    }
+
+/*
+    public void update_saldo_post_all(int id_mov) {
         db.execSQL("update MOVIMENTS " +
                 "      set saldo_post = import  " +
                 "                     + ifnull((select t2.saldo_post " +
                 "                                 from MOVIMENTS t2 " +
                 "                                where t2.id_mov < MOVIMENTS.id_mov " +
                 "                                order by t2.data_mov desc, t2.id_mov desc limit 1), 0) " +
-                "where data_mov >= '" + dateFormat.format(mov.data_mov) + "' ");
+                "where data_mov >= (select data_mov from MOVIMENTS where id_mov >= " + String.valueOf(id_mov) + " limit 1)");
         db.execSQL("delete from SALDO_ACT");
         db.execSQL("insert into SALDO_ACT (id_ult_mov, saldo)  select id_mov, saldo_post from MOVIMENTS  where id_mov = (select max(id_mov) from MOVIMENTS)");
     }
+*/
 
-
-    // Eliminar l'últim moviment
-    public boolean eliminar_ult_mov() {
-
-        db.execSQL("delete from MOVIMENTS where id_mov = (select id_ult_mov from SALDO_ACT) ");
-
-        return true;
-    }
-
-
-    // Test corret import string
-    double convertImportStr(String str_import, String sign_import) {
+    // Test correct import string
+    public double convertImportStr(String str_import, String sign_import) {
 
         String str_import_ok = str_import.replace(",", ".");
         if (str_import_ok == "") { str_import_ok = "0"; }
@@ -221,134 +331,5 @@ public class DBManager {
         String import_num_ok = String.valueOf(twoDForm.format(import_num));
         return import_num_ok.replace(".", ",");
     }
-
-    // Retorna tots els moviments
-    public Cursor get_llista_moviments(int id_mov_ofset, int window_count) {
-
-        String sent = "select id_mov as _id, import, id_mov || ' - ' || descripcio, data_mov, geoposicio, saldo_post " +
-                      " from MOVIMENTS ";
-
-        if (id_mov_ofset != 0) sent += " where id_mov <= " + String.valueOf(id_mov_ofset);
-
-        sent += " order by id_mov desc " +
-                " limit " + String.valueOf(window_count);
-
-        return db.rawQuery(sent, null);
-
-        /*
-        return db.rawQuery("select id_mov as _id, " +
-                "import || ' € : ' || descripcio    as info1, " +
-                "data_mov                           as info2 " +
-                " from MOVIMENTS order by id_mov desc", null);
-                */
-    }
-
-    // Retorna el ID_MOV del últim moviment de la pàgina
-    public int get_last_ofset(int id_mov_ofset, int window_count) {
-        int last_ofset_cur_pag = id_mov_ofset;
-
-        String sent = "select id_mov from (" +
-                "           select id_mov from MOVIMENTS where id_mov <= " + String.valueOf(id_mov_ofset) +
-                "           order by id_mov desc limit " + String.valueOf(window_count) +
-                ") order by id_mov limit 1";
-
-        Cursor F_cursor = db.rawQuery(sent, null);
-        if (F_cursor.moveToFirst()) last_ofset_cur_pag  = F_cursor.getInt(0);
-        F_cursor.close();
-        return last_ofset_cur_pag;
-    }
-
-    // Retorna el ID_MOV del primer moviment (ordre invers) per la pàgina anterior
-    public int get_next_ofset(int id_mov_ofset, int window_count) {
-        int next_ofset = id_mov_ofset;
-        int last_ofset_cur_pag = get_last_ofset(id_mov_ofset, window_count);
-
-        String sent = "select id_mov from (" +
-                      "         select id_mov from MOVIMENTS where id_mov < " + String.valueOf(id_mov_ofset) +
-                      "         order by id_mov desc limit " + String.valueOf(window_count) +
-                      ") order by id_mov limit 1";
-
-        Cursor F_cursor = db.rawQuery(sent, null);
-        if (F_cursor.moveToFirst()) next_ofset  = F_cursor.getInt(0);
-        F_cursor.close();
-
-        // Si l'últim id de la pàgina és igual al primer de la pàgina següent, és la última pàgina
-        if (last_ofset_cur_pag == next_ofset) next_ofset = -1;
-
-        return next_ofset;
-    }
-
-    // Retorna el ID_MOV del primer moviment (ordre invers) per la pàgina anterior
-    public int get_prev_ofset(int id_mov_ofset, int window_count) {
-        int next_ofset = id_mov_ofset;
-
-        String sent = "select id_mov from (" +
-                "           select id_mov from MOVIMENTS where id_mov > " + String.valueOf(id_mov_ofset) +
-                "           order by id_mov limit " + String.valueOf(window_count) +
-                ") order by id_mov desc limit 1";
-
-        Cursor F_cursor = db.rawQuery(sent, null);
-        if (F_cursor.moveToFirst()) next_ofset  = F_cursor.getInt(0);
-        F_cursor.close();
-
-        if (id_mov_ofset == next_ofset) next_ofset = -1;    // primera pàgina
-
-        return next_ofset;
-    }
-
-    // Retorna el total de pàgines i la pàgina actual
-    public int[] get_pag_info(int id_mov_ofset, int window_count) {
-        int current_pag = 0;
-        int total_pags = 0;
-
-        String sent = "select case (val_cur) when trunc_val_cur then trunc_val_cur else trunc_val_cur + 1 end, " +
-                "       case (val_tot) when trunc_val_tot then trunc_val_tot else trunc_val_tot + 1 end " +
-                "from ( " +
-                "select count(*) / round(t2.window) as val_tot, " +
-                "       cast(count(*) / round(t2.window) as integer) as trunc_val_tot, " +
-                "       count(case when (id_mov >= t2.cur_id) then 1 else null end) / round(t2.window) as val_cur, " +
-                "       cast(count(case when (id_mov >= t2.cur_id) then 1 else null end) / round(t2.window) as integer) as trunc_val_cur " +
-                "from MOVIMENTS, " +
-                "(select " + String.valueOf(id_mov_ofset) + " as cur_id, " + String.valueOf(window_count) + " as window) as t2)";
-
-        Cursor F_cursor = db.rawQuery(sent, null);
-        if (F_cursor.moveToFirst()) {
-            current_pag = F_cursor.getInt(0);
-            total_pags = F_cursor.getInt(1);
-        }
-        F_cursor.close();
-
-        return new int[] { current_pag, total_pags };
-    }
-
-
-
-    // Retorna tots els moviments
-    public Cursor get_llista_moviments_cvs() {
-        return db.rawQuery("select id_mov " +
-                "       || ';' ||  ifnull(import, '') " +
-                "       || ';' ||  ifnull(descripcio, '') " +
-                "       || ';' ||  ifnull(data_mov, '') " +
-                "       || ';' ||  ifnull(geoposicio, '') " +
-                "       || ';' ||  ifnull(saldo_post, '') as linia " +
-                "  from MOVIMENTS " +
-                " order by id_mov", null);
-    }
-
-    public void update_saldo_post_all(int id_mov) {
-        db.execSQL("update MOVIMENTS " +
-                "      set saldo_post = import  " +
-                "                     + ifnull((select t2.saldo_post " +
-                "                                 from MOVIMENTS t2 " +
-                "                                where t2.id_mov < MOVIMENTS.id_mov " +
-                "                                order by t2.data_mov desc, t2.id_mov desc limit 1), 0) " +
-                "where data_mov >= (select data_mov from MOVIMENTS where id_mov >= " + String.valueOf(id_mov) + " limit 1)");
-        db.execSQL("delete from SALDO_ACT");
-        db.execSQL("insert into SALDO_ACT (id_ult_mov, saldo)  select id_mov, saldo_post from MOVIMENTS  where id_mov = (select max(id_mov) from MOVIMENTS)");
-
-
-    }
-
-
 
 }

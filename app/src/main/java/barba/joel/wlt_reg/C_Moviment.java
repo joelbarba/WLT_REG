@@ -13,6 +13,7 @@ public class C_Moviment {
     public Date data_mov;
     public String geopos_mov;
     public double saldo_post;
+    public int id_ordre;
 
     public String import_editat;
     public String saldo_post_editat;
@@ -30,6 +31,7 @@ public class C_Moviment {
         this.saldo_post_editat = "0,00";
         this.data_editada = "";
         this.signe = "";
+        this.id_ordre = 0;
     }
 
     public void loadMovDB(int id_mov) {
