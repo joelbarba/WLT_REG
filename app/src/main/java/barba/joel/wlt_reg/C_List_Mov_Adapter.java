@@ -31,9 +31,11 @@ public class C_List_Mov_Adapter extends ArrayAdapter {
         TextView id_mov_list_desc = (TextView) item.findViewById(R.id.id_mov_list_desc);
         TextView id_mov_list_imp  = (TextView) item.findViewById(R.id.id_mov_list_imp);
         TextView id_mov_list_date = (TextView) item.findViewById(R.id.id_mov_list_date);
+        TextView id_mov_list_saldo_post = (TextView) item.findViewById(R.id.id_mov_list_saldo_post);
         id_mov_list_desc.setText(llista_movs.get(position).desc_mov);
         id_mov_list_imp.setText(llista_movs.get(position).signe + llista_movs.get(position).import_editat + " €");
         id_mov_list_date.setText(llista_movs.get(position).data_editada);
+        id_mov_list_saldo_post.setText("(" + llista_movs.get(position).saldo_post_editat + " €)");
 
         if (llista_movs.get(position).signe == "-") {   id_mov_list_imp.setTextColor(ContextCompat.getColor(context, R.color.colorImpNeg)); }
         else {                                          id_mov_list_imp.setTextColor(ContextCompat.getColor(context, R.color.colorImpPos)); }

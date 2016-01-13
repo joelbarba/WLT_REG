@@ -10,7 +10,7 @@ import java.text.ParseException;
 public class DataBaseSQLiteHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "DB_WALLET_REG";
-    private static final int DATABASE_VERSION = 22;
+    private static final int DATABASE_VERSION = 24;
 
     // Definició de la base de dades
     String sent_create_saldo_act = "create table SALDO_ACT (" +
@@ -32,7 +32,7 @@ public class DataBaseSQLiteHelper extends SQLiteOpenHelper {
             + "                 or "
             + "                 ((MOVIMENTS.data_mov = t2.data_mov) and (MOVIMENTS.id_mov > t2.id_mov))"
             + "                )"
-            + "        );"
+            + "        ) + 1;"
             // Actualitzar el saldo posterior segons el nou id_ordre"
             + "   update MOVIMENTS set saldo_post = "
             // + "     -- import + ifnull(round((select saldo_post from MOVIMENTS as t2 where t2.id_ordre < MOVIMENTS.id_ordre order by id_ordre desc limit 1), 2), 0);"

@@ -42,7 +42,7 @@
             android:layout_alignParentBottom="true" />
 
         <TextView
-            android:layout_width="173dp"
+            android:layout_width="123dp"
             android:layout_height="wrap_content"
             android:text="2016-12-31 00:00:00"
             android:id="@+id/id_mov_list_date"
@@ -52,5 +52,17 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginTop="4px" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(130,89 €)"
+            android:id="@+id/id_mov_list_saldo_post"
+            android:textSize="12dp"
+            android:textColor="#cf8f57"
+            android:layout_alignTop="@+id/id_mov_list_date"
+            android:layout_toRightOf="@+id/id_mov_list_date"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
 </LinearLayout>

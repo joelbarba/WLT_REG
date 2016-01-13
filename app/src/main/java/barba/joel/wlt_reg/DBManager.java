@@ -173,7 +173,7 @@ public class DBManager {
     // Retorna tots els moviments
     public Cursor get_llista_moviments(int id_ord_ofset, int window_count) {
 
-        String sent = "select id_mov as _id, import, id_mov || ' - ' || id_ordre || ' - ' || descripcio, data_mov, geoposicio, saldo_post, id_ordre " +
+        String sent = "select id_mov as _id, import, id_ordre || ' - ' || id_mov || ' - ' || descripcio, data_mov, geoposicio, saldo_post, id_ordre " +
                       " from MOVIMENTS ";
 
         if (id_ord_ofset != 0) sent += " where id_ordre <= " + String.valueOf(id_ord_ofset);
