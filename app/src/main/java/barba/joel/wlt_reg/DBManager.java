@@ -34,7 +34,7 @@ public class DBManager {
     public void ini_db(boolean reload) {
         if ((reload) || (db.rawQuery("select 1 from SALDO_ACT", null).getCount() == 0)) {
             db.execSQL("delete from SALDO_ACT");
-            // db.execSQL("delete from MOVIMENTS");
+            db.execSQL("delete from MOVIMENTS");
             db.execSQL("insert into SALDO_ACT (saldo) values (0)");
         }
     }

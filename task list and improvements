@@ -1,0 +1,49 @@
+input_import_mov
+toggle_import_sign
+input_desc_mov
+mov_det_datePicker
+mov_det_timePicker
+
+button_del_mov
+button_mod_mov
+
+
+&rarr;
+working_with_google_apis_1.png
+
+
+---------------------
+
+
+- Pantalla principal:
+	ok - Boto per anar a la llista
+	ok - input text import pantalla principal: Enter = add output
+	ok - afegir desc ult mov
+	ok - saltar a det. mov auto al afegir nou
+	- afegir el boto +/- al input del import
+
+- Pantalla llista:
+	ok - Enllaç llista -> pantalla det mov (passar ID)
+	ok - afegir descripció
+	ok - color imports
+	ok - paginació
+	ok - afegir info saldo posterior
+	- que quan torni enrrera del detall de moviment, es marqui el moviment modificat (i quedi el scroll a la pos ant)
+	- filtre (input/output)
+
+- Pantalla detall:
+	ok - focus desc per defecte
+	ok - Al modificar moviment, recalcular saldos
+	ok - Modificar data / hora dels moviments
+	ok - Eliminar moviment
+	ok - Recalcular saldos (reordenar movs) al actualitzar la data
+	ok - Reordenar moviments correctament segons la data
+	- Shortcut to usual description movements
+
+- Pantalla configuració:
+	ok - Boto reset
+	ok - Opció enviar tota la informació (a algun lloc on es pugui capturar, mail, file...)
+
+
+
+

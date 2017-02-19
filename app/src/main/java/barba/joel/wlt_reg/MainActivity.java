@@ -237,9 +237,9 @@ public class MainActivity extends AppCompatActivity {
         TextView id_label_info_last_desc = (TextView)findViewById(R.id.id_label_info_last_desc);
 
 
-        id_label_info_last_imp.setText(ult_mov[0]);
+        id_label_info_last_imp.setText(ult_mov[0] + " €");
         id_label_info_last_date.setText(ult_mov[1]);
-        id_label_info_last_desc.setText(ult_mov[3] + " €");
+        id_label_info_last_desc.setText(ult_mov[3]);
         if (ult_mov[2] == "-") {   id_label_info_last_imp.setTextColor(ContextCompat.getColor(context, R.color.colorImpNeg)); }
         else {                     id_label_info_last_imp.setTextColor(ContextCompat.getColor(context, R.color.colorImpPos)); }
     }
