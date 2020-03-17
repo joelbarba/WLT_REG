@@ -19,7 +19,8 @@
         android:name="com.example.wlt_reg3.ListFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_list">
-        <action android:id="@+id/action_List_to_Main" app:destination="@id/MainFragment" />
+        <action android:id="@+id/action_List_to_Main"   app:destination="@id/MainFragment" />
+        <action android:id="@+id/action_List_to_Detail" app:destination="@id/MovDetail" />
     </fragment>
 
     <fragment

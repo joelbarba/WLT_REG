@@ -1,17 +1,20 @@
 package com.example.wlt_reg3;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -27,7 +30,7 @@ public class ListFragment extends Fragment {
     public int id_ord_offset = 0;
     public int id_next_offset = 0;
     public int id_prev_offset = 0;
-    public int window_count = 100;
+    public int window_count = 10;
 
     public C_List_Mov_Adapter adp;
 
@@ -50,13 +53,36 @@ public class ListFragment extends Fragment {
 
         loadPage();
 
-//        view.findViewById(R.id.button_second).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                NavHostFragment.findNavController(SecondFragment.this)
-//                        .navigate(R.id.action_List_to_Main);
-//            }
-//        });
+        ListView listView = (ListView) vm.findViewById(R.id.llista_moviments_view);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                NavHostFragment.findNavController(ListFragment.this).navigate(R.id.action_List_to_Detail);
+                // Enllaçar amb la pantalla de detall del moviment
+//                Intent i = new Intent(context, DetailMovActivity.class);
+//                Bundle b = new Bundle();
+//                b.putString("ID_ULT_MOV", String.valueOf(id));
+//                i.putExtras(b);
+//
+//                startActivity(i);
+            }
+        });
+
+        // BUTTON: Next page
+        vm.findViewById(R.id.id_button_next).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changePage(id_next_offset);
+            }
+        });
+
+        // BUTTON: Prev page
+        vm.findViewById(R.id.id_button_prev).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changePage(id_prev_offset);
+            }
+        });
     }
 
 
@@ -68,7 +94,6 @@ public class ListFragment extends Fragment {
         ListView listView = (ListView) vm.findViewById(R.id.llista_moviments_view);
         listView.setAdapter(adp);
 
-//        Cursor F_cursor = this.ac.DB_WR.get_llista_moviments(id_ord_offset, window_count);
         Cursor F_cursor = this.ac.getMovs(id_ord_offset, window_count);
         if (F_cursor.moveToFirst()) {
             do {
@@ -125,6 +150,18 @@ public class ListFragment extends Fragment {
 
         }
 
-        ac.growl("id_ord_ofset = " + id_ord_offset + ", id_next_ofset = " + id_next_offset + ", id_prev_ofset = " + id_prev_offset);
+//        ac.growl("id_ord_ofset = " + id_ord_offset + ", id_next_ofset = " + id_next_offset + ", id_prev_ofset = " + id_prev_offset);
     }
+
+    private void changePage(int new_offset) {
+        this.id_ord_offset = new_offset;
+        loadPage();
+
+        // Redraw the view
+//        adp.notifyDataSetChanged();
+//        ListView listView = (ListView) vm.findViewById(R.id.llista_moviments_view);
+//        listView.invalidateViews();
+//        listView.refreshDrawableState();
+    }
+
 }
