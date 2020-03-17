@@ -18,6 +18,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.fragment.NavHostFragment;
 
+import static com.example.wlt_reg3.R.color.colorImpNeg;
+
 public class MainFragment extends Fragment {
 
 //    private DBManager DB_WR = null;
@@ -52,7 +54,7 @@ public class MainFragment extends Fragment {
         final Button button_op4 = (Button) view.findViewById(R.id.button_op4);
         final Button button_op5 = (Button) view.findViewById(R.id.button_op5);
 
-        this.mostrarSaldoAct();
+        this.showBalance();
 
         edit_new_input.setOnKeyListener(new EditText.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -97,11 +99,6 @@ public class MainFragment extends Fragment {
         });
 
 
-
-
-
-
-
         // LIST button
         button_list.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,7 +112,6 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 createNewOp(edit_new_input.getText().toString(), sign, "");
-                mostrarSaldoAct();
             }
         });
 
@@ -139,7 +135,7 @@ public class MainFragment extends Fragment {
     }
 
     // Show current balance
-    private void mostrarSaldoAct() {
+    private void showBalance() {
         TextView etq_saldo = (TextView) this.vm.findViewById(R.id.label_saldo);
         etq_saldo.setText(String.format("€ %s", ac.formatImport(ac.getBalance())));
     }
@@ -148,13 +144,13 @@ public class MainFragment extends Fragment {
     private void createNewOp(String str_import, String sign_import, String descripcio) {
         double balance = ac.insertNewMov(str_import, sign_import, descripcio);
         double num_import = Double.parseDouble(str_import.replace(",", "."));
+        showBalance();
 
         if (num_import != 0) {
-            mostrarSaldoAct();
             if (sign_import.equals("+")) {
-                mostrarAvis("Cash in: € " + ac.formatImport(num_import));
+                ac.growl("Cash in: € " + ac.formatImport(num_import));
             } else {
-                mostrarAvis("New payment: € " + ac.formatImport(num_import) + " - " + descripcio);
+                ac.growl("New payment: € " + ac.formatImport(num_import) + " - " + descripcio);
             }
 
             // Clear input
@@ -167,12 +163,5 @@ public class MainFragment extends Fragment {
             EditText edit_new_input = (EditText) this.vm.findViewById(R.id.edit_new_input);
             edit_new_input.requestFocus();
         }
-    }
-
-    private void mostrarAvis(String text) {
-        Activity activity = getActivity();
-        assert activity != null;
-        Toast toast = Toast.makeText(activity.getApplicationContext(), text, Toast.LENGTH_SHORT);
-        toast.show();
     }
 }

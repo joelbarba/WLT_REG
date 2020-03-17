@@ -176,12 +176,24 @@ public class DBManager {
 
 
     // Retorna tots els moviments
-    public Cursor get_llista_moviments(int id_ord_ofset, int window_count) {
+    public Cursor get_llista_moviments(int id_ord_offset, int window_count) {
 
-        String sent = "select id_mov as _id, import, id_ordre || ' - ' || descripcio, data_mov, geoposicio, saldo_post, id_ordre " +
-                      " from MOVIMENTS ";
+        String sent =
+                "select id_mov as _id, " +
+                "       import, " +
+                "       id_ordre || ' - ' || descripcio, " +
+                "       (case cast (strftime('%w', data_mov) as integer)" +
+                "           when 0 then 'SUN'" +
+                "           when 1 then 'MON'" +
+                "           when 2 then 'TUE'" +
+                "           when 3 then 'WED'" +
+                "           when 4 then 'THU'" +
+                "           when 5 then 'FRI'" +
+                "                  else 'SAT' end) || ' ' || strftime('%d-%m-%Y', data_mov), " +
+                "        geoposicio, saldo_post, id_ordre " +
+                "   from MOVIMENTS ";
 
-        if (id_ord_ofset != 0) sent += " where id_ordre <= " + String.valueOf(id_ord_ofset);
+        if (id_ord_offset != 0) sent += " where id_ordre <= " + String.valueOf(id_ord_offset);
 
         sent += " order by id_ordre desc " +
                 " limit " + String.valueOf(window_count);
@@ -197,11 +209,11 @@ public class DBManager {
     }
 
     // Retorna el ID_MOV del últim moviment de la pàgina
-    public int get_last_ofset(int id_ord_ofset, int window_count) {
-        int last_ofset_cur_pag = id_ord_ofset;
+    public int get_last_offset(int id_ord_offset, int window_count) {
+        int last_ofset_cur_pag = id_ord_offset;
 
         String sent = "select id_ordre from (" +
-                "           select id_ordre from MOVIMENTS where id_ordre <= " + String.valueOf(id_ord_ofset) +
+                "           select id_ordre from MOVIMENTS where id_ordre <= " + String.valueOf(id_ord_offset) +
                 "           order by id_ordre desc limit " + String.valueOf(window_count) +
                 ") order by id_ordre limit 1";
 
@@ -212,47 +224,47 @@ public class DBManager {
     }
 
     // Retorna el ID_MOV del primer moviment (ordre invers) per la pàgina anterior
-    public int get_next_ofset(int id_ord_ofset, int window_count) {
-        int next_ofset = id_ord_ofset;
-        int last_ofset_cur_pag = get_last_ofset(id_ord_ofset, window_count);
+    public int get_next_offset(int id_ord_offset, int window_count) {
+        int next_offset = id_ord_offset;
+        int last_offset_cur_pag = get_last_offset(id_ord_offset, window_count);
 
         String sent = "select id_ordre from (" +
-                      "         select id_ordre from MOVIMENTS where id_ordre < " + String.valueOf(id_ord_ofset) +
+                      "         select id_ordre from MOVIMENTS where id_ordre < " + String.valueOf(id_ord_offset) +
                       "         order by id_ordre desc limit " + String.valueOf(window_count) +
                       ") order by id_ordre limit 1";
 
         Cursor F_cursor = db.rawQuery(sent, null);
-        if (F_cursor.moveToFirst()) next_ofset  = F_cursor.getInt(0);
+        if (F_cursor.moveToFirst()) next_offset  = F_cursor.getInt(0);
         F_cursor.close();
 
         // Si l'últim id de la pàgina és igual al primer de la pàgina següent, és la última pàgina
-        if (last_ofset_cur_pag == next_ofset) next_ofset = -1;
+        if (last_offset_cur_pag == next_offset) next_offset = -1;
 
-        return next_ofset;
+        return next_offset;
     }
 
 
     // Retorna el ID_MOV del primer moviment (ordre invers) per la pàgina anterior
-    public int get_prev_ofset(int id_ord_ofset, int window_count) {
-        int next_ofset = id_ord_ofset;
+    public int get_prev_offset(int id_ord_offset, int window_count) {
+        int next_offset = id_ord_offset;
 
         String sent = "select id_ordre from (" +
-                "           select id_ordre from MOVIMENTS where id_ordre > " + String.valueOf(id_ord_ofset) +
+                "           select id_ordre from MOVIMENTS where id_ordre > " + String.valueOf(id_ord_offset) +
                 "           order by id_ordre limit " + String.valueOf(window_count) +
                 ") order by id_ordre desc limit 1";
 
         Cursor F_cursor = db.rawQuery(sent, null);
-        if (F_cursor.moveToFirst()) next_ofset  = F_cursor.getInt(0);
+        if (F_cursor.moveToFirst()) next_offset  = F_cursor.getInt(0);
         F_cursor.close();
 
-        if (id_ord_ofset == next_ofset) next_ofset = -1;    // primera pàgina
+        if (id_ord_offset == next_offset) next_offset = -1;    // primera pàgina
 
-        return next_ofset;
+        return next_offset;
     }
 
 
     // Retorna el total de pàgines i la pàgina actual
-    public int[] get_pag_info(int id_ord_ofset, int window_count) {
+    public int[] get_pag_info(int id_ord_offset, int window_count) {
         int current_pag = 0;
         int total_pags = 0;
 
@@ -264,7 +276,7 @@ public class DBManager {
                 "       count(case when (id_ordre >= t2.cur_id) then 1 else null end) / round(t2.window) as val_cur, " +
                 "       cast(count(case when (id_ordre >= t2.cur_id) then 1 else null end) / round(t2.window) as integer) as trunc_val_cur " +
                 " from MOVIMENTS, " +
-                " (select " + String.valueOf(id_ord_ofset) + " as cur_id, " + String.valueOf(window_count) + " as window) as t2)";
+                " (select " + String.valueOf(id_ord_offset) + " as cur_id, " + String.valueOf(window_count) + " as window) as t2)";
 
         Cursor F_cursor = db.rawQuery(sent, null);
         if (F_cursor.moveToFirst()) {

@@ -51,7 +51,7 @@ public class DetailFragment extends Fragment {
         view.findViewById(R.id.button_mod_mov).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((WRInterface) getActivity()).setVal(900);
+//                ((WRInterface) getActivity()).setVal(900);
 
                 int currVal = 0; // ((WRInterface) getActivity()).getVal();
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "hieeeeeeeeeeeee ---> " + currVal, Toast.LENGTH_SHORT);
