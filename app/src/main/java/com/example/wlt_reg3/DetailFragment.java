@@ -274,12 +274,23 @@ public class DetailFragment extends Fragment {
         TextView id_label_day           = (TextView) vm.findViewById(R.id.id_label_day);
         TextView id_label_hour          = (TextView) vm.findViewById(R.id.id_label_hour);
         TextView id_label_min           = (TextView) vm.findViewById(R.id.id_label_min);
+        TextView id_label_wday          = (TextView) vm.findViewById(R.id.id_label_wday);
 
         id_label_year.setText(  String.valueOf(fourDForm.format(mov_date.get(Calendar.YEAR))));
         id_label_month.setText( String.valueOf(twoDForm.format(mov_date.get(Calendar.MONTH) + 1)));
         id_label_day.setText(   String.valueOf(twoDForm.format(mov_date.get(Calendar.DAY_OF_MONTH))));
         id_label_hour.setText(  String.valueOf(twoDForm.format(mov_date.get(Calendar.HOUR_OF_DAY))));
         id_label_min.setText(   String.valueOf(twoDForm.format(mov_date.get(Calendar.MINUTE))));
+        int wDay = mov_date.get(Calendar.DAY_OF_WEEK);
+//        ac.growl("DAY " + wDay);
+
+        if (wDay == 1) { id_label_wday.setText("Sunday"); }
+        else if (wDay == 2) { id_label_wday.setText("Monday"); }
+        else if (wDay == 3) { id_label_wday.setText("Tuesday"); }
+        else if (wDay == 4) { id_label_wday.setText("Wednesday"); }
+        else if (wDay == 5) { id_label_wday.setText("Thursday"); }
+        else if (wDay == 6) { id_label_wday.setText("Friday"); }
+        else if (wDay == 7) { id_label_wday.setText("Saturday"); }
     }
 
 
