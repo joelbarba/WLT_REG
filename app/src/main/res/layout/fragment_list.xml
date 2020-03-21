@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ListFragment">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="10dp"
@@ -35,13 +34,40 @@
                 android:enabled="false"
                 android:contextClickable="false" />
 
-            <TextView android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Movements list"
+            <TextView
+                android:id="@+id/id_titol_llista_movs"
+                android:layout_width="63dp"
+                android:layout_height="30dp"
                 android:layout_alignBaseline="@+id/id_button_prev"
                 android:layout_alignBottom="@+id/id_button_prev"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/id_titol_llista_movs" />
+                android:layout_marginStart="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/id_button_prev"
+                android:layout_toRightOf="@+id/id_button_main"
+                android:gravity="center"
+                android:text="1/5" />
+
+            <Button
+                android:id="@+id/id_button_main"
+                android:layout_width="129dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="top"
+                android:layout_marginStart="3dp"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_toStartOf="@+id/id_button_next"
+                android:layout_toLeftOf="@+id/id_button_next"
+                android:layout_toEndOf="@+id/id_titol_llista_movs"
+                android:layout_toRightOf="@+id/id_titol_llista_movs"
+                android:height="20dp"
+                android:text="GoTo MAIN"
+                android:textSize="12dp" />
 
             <Button
                 android:layout_width="wrap_content"

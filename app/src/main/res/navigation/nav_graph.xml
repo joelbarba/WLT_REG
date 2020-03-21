@@ -29,6 +29,7 @@
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_details">
         <action android:id="@+id/action_Details_to_Main" app:destination="@id/MainFragment" />
+        <action android:id="@+id/action_Details_to_List" app:destination="@id/SecondFragment" />
     </fragment>
 
 </navigation>

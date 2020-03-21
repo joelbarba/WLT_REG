@@ -20,6 +20,8 @@ import java.text.DecimalFormat;
 public class MainActivity extends AppCompatActivity implements WRInterface {
     public DBManager DB_WR = null;
     public double balance = 0;
+    public int selMovId = 0;
+    public C_Moviment selMov = new C_Moviment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +62,21 @@ public class MainActivity extends AppCompatActivity implements WRInterface {
     public double getBalance() { return this.balance; }
 
     public double insertNewMov(String str_import, String sign_import, String descripcio) {
-        this.balance = this.DB_WR.insert_new_mov(str_import, sign_import, descripcio);
+        this.selMovId = (int) this.DB_WR.insert_new_mov(str_import, sign_import, descripcio);
+        this.balance = this.DB_WR.get_saldo();
         return this.balance;
     }
+
+    public int getSelMovId() { return selMovId; }
+    public void setSelMovId(int id_mov) { this.selMovId = id_mov; }
+    public C_Moviment loadMov() { return DB_WR.get_mov_info(selMovId); }
+    public void delMov(C_Moviment mov) { DB_WR.eliminar_mov(mov); this.selMovId = 0; }
+    public void saveMov(C_Moviment mov) {
+        if (!DB_WR.set_mov_DB(mov)) {
+            growl("Error saving movement");
+        }
+    }
+
 
     public Cursor getMovs(int id_ord_offset, int window_count) { return this.DB_WR.get_llista_moviments(id_ord_offset, window_count); }
     public int getLastOffset(int id_ord_offset, int window_count) { return DB_WR.get_last_offset(id_ord_offset, window_count); }

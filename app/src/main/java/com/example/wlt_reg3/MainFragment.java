@@ -142,6 +142,11 @@ public class MainFragment extends Fragment {
 
     // Add new movement
     private void createNewOp(String str_import, String sign_import, String descripcio) {
+        EditText edit_new_input = (EditText) this.vm.findViewById(R.id.edit_new_input);
+        if (str_import.equals("")) {
+            edit_new_input.requestFocus();
+            return;
+        }
         double balance = ac.insertNewMov(str_import, sign_import, descripcio);
         double num_import = Double.parseDouble(str_import.replace(",", "."));
         showBalance();
@@ -154,13 +159,9 @@ public class MainFragment extends Fragment {
             }
 
             // Clear input
-            final EditText edit_new_input = (EditText) vm.findViewById(R.id.edit_new_input);
             edit_new_input.setText("");
-
-//            saltar_ult_mov();   // Enllaçar pantalla detall moviment
-//            NavHostFragment.findNavController(MainFragment.this).navigate(R.id.action_Main_to_List);
+            NavHostFragment.findNavController(MainFragment.this).navigate(R.id.action_Main_to_Details);
         } else {
-            EditText edit_new_input = (EditText) this.vm.findViewById(R.id.edit_new_input);
             edit_new_input.requestFocus();
         }
     }

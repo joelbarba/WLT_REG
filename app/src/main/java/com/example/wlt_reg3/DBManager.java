@@ -136,7 +136,7 @@ public class DBManager {
     // Inserir nou moviment, i retornar el saldo actual
     public double insert_new_mov(String str_import, String sign_import, String descripcio) {
 
-        double mov_import = convertImportStr(str_import, sign_import);
+           double mov_import = convertImportStr(str_import, sign_import);
 
         if (mov_import != 0) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -151,9 +151,10 @@ public class DBManager {
             newRow.put("data_mov", dateFormat.format(date));
             // newRow.put("geoposicio",    "xxxxxx");
 //            newRow.put("saldo_post", String.valueOf(saldo_post));
-            db.insert("MOVIMENTS", null, newRow);
+            return db.insert("MOVIMENTS", null, newRow);
         }
-        return get_saldo();
+
+        return -1;
 
     }
 
@@ -182,14 +183,16 @@ public class DBManager {
                 "select id_mov as _id, " +
                 "       import, " +
                 "       id_ordre || ' - ' || descripcio, " +
+                "       strftime('%Y-%m-%d', data_mov) || ' ' || " +
                 "       (case cast (strftime('%w', data_mov) as integer)" +
-                "           when 0 then 'SUN'" +
-                "           when 1 then 'MON'" +
-                "           when 2 then 'TUE'" +
-                "           when 3 then 'WED'" +
-                "           when 4 then 'THU'" +
-                "           when 5 then 'FRI'" +
-                "                  else 'SAT' end) || ' ' || strftime('%d-%m-%Y', data_mov), " +
+                "           when 0 then 'Sun'" +
+                "           when 1 then 'Mon'" +
+                "           when 2 then 'Tue'" +
+                "           when 3 then 'Wed'" +
+                "           when 4 then 'Thu'" +
+                "           when 5 then 'Fri'" +
+                "                  else 'Sat' end), " +
+//                "                  else 'SAT' end) || ' ' || strftime('%d-%m-%Y', data_mov), " +
                 "        geoposicio, saldo_post, id_ordre " +
                 "   from MOVIMENTS ";
 

@@ -57,13 +57,13 @@ public class ListFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Link to mov detail fragment
+                ac.setSelMovId((int) id);
                 NavHostFragment.findNavController(ListFragment.this).navigate(R.id.action_List_to_Detail);
-                // Enllaçar amb la pantalla de detall del moviment
 //                Intent i = new Intent(context, DetailMovActivity.class);
 //                Bundle b = new Bundle();
 //                b.putString("ID_ULT_MOV", String.valueOf(id));
 //                i.putExtras(b);
-//
 //                startActivity(i);
             }
         });
@@ -81,6 +81,14 @@ public class ListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 changePage(id_prev_offset);
+            }
+        });
+
+        // BUTTON: Goto Main
+        vm.findViewById(R.id.id_button_main).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(ListFragment.this).navigate(R.id.action_List_to_Main);
             }
         });
     }
@@ -146,11 +154,11 @@ public class ListFragment extends Fragment {
             id_button_prev.setEnabled((id_prev_offset != -1));
 
             int[] info_pag = ac.getPagInfo(id_ord_offset, window_count);
-            id_titol_llista_movs.setText("Movements list (" + String.valueOf(info_pag[0]) + "/" + String.valueOf(info_pag[1]) + ")");
+            id_titol_llista_movs.setText(String.valueOf(info_pag[0]) + "/" + String.valueOf(info_pag[1]));
 
         }
 
-//        ac.growl("id_ord_ofset = " + id_ord_offset + ", id_next_ofset = " + id_next_offset + ", id_prev_ofset = " + id_prev_offset);
+//        ac.growl("id_ord_offset = " + id_ord_offset + ", id_next_offset = " + id_next_offset + ", id_prev_offset = " + id_prev_offset);
     }
 
     private void changePage(int new_offset) {

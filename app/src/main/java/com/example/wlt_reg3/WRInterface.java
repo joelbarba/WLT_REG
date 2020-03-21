@@ -8,6 +8,13 @@ public interface WRInterface {
 
     public double getBalance();
     public double insertNewMov(String str_import, String sign_import, String descripcio);
+
+    public int getSelMovId();
+    public void setSelMovId(int movId);
+    public C_Moviment loadMov();
+    public void saveMov(C_Moviment mov);
+    public void delMov(C_Moviment mov);
+
     public Cursor getMovs(int id_ord_offset, int window_count);
     public int getLastOffset(int id_ord_offset, int window_count);
     public int getNextOffset(int id_ord_offset, int window_count);
