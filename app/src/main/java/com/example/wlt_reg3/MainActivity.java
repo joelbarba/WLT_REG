@@ -96,8 +96,12 @@ public class MainActivity extends AppCompatActivity implements WRInterface {
 
     public double getBalance() { return this.balance; }
 
-    public double insertNewMov(String str_import, String sign_import, String descripcio) {
-        this.selMovId = (int) this.DB_WR.insert_new_mov(str_import, sign_import, descripcio);
+    public double insertNewMov(String str_import, String sign_import, String desc) {
+        String descCap = desc;
+        if (desc.length() > 1) { // Automatically turn first char Uppercase
+            descCap = desc.substring(0, 1).toUpperCase() + desc.substring(1);
+        }
+        this.selMovId = (int) this.DB_WR.insert_new_mov(str_import, sign_import, descCap);
         this.balance = this.DB_WR.get_saldo();
         return this.balance;
     }
@@ -107,6 +111,9 @@ public class MainActivity extends AppCompatActivity implements WRInterface {
     public C_Moviment loadMov() { return DB_WR.get_mov_info(selMovId); }
     public void delMov(C_Moviment mov) { DB_WR.eliminar_mov(mov); this.selMovId = 0; }
     public void saveMov(C_Moviment mov) {
+        if (mov.desc_mov.length() > 1) { // Automatically turn first char Uppercase
+            mov.desc_mov = mov.desc_mov.substring(0, 1).toUpperCase() + mov.desc_mov.substring(1);
+        }
         if (!DB_WR.set_mov_DB(mov)) {
             growl("Error saving movement");
         }
