@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -13,9 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import static com.example.wlt_reg3.R.color.colorImpNeg;
@@ -34,13 +38,15 @@ public class MainFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState)  {
         super.onViewCreated(view, savedInstanceState);
 
         // Reference to main activity
         this.ac = (WRInterface) getActivity();
         if (ac == null) { return; }
         this.vm = view;
+
+
 
         final EditText edit_new_input = (EditText) view.findViewById(R.id.edit_new_input);
         final TextView signText = (TextView) view.findViewById(R.id.signText);

@@ -21,6 +21,10 @@ public interface WRInterface {
     public int getPrevOffset(int id_ord_offset, int window_count);
     public int[] getPagInfo(int id_ord_offset, int window_count);
 
+    public void importDB();
+    public void exportCSV();
+    public void exportDB();
+    public void resetDB();
 
     public String formatImport(double import_num);
     public void growl(String text);
