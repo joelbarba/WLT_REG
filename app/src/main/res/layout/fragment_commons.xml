@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CommonsFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        tools:context="barba.joel.wlt_reg.SettingsActivity">
+
+
+        <TextView
+            android:id="@+id/title_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:height="45dp"
+            android:gravity="center_vertical"
+            android:text="Common Items"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/common_save_button"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="5dp"
+            android:width="30dp"
+            android:text="SAVE ALL"
+            android:textSize="20sp" />
+
+
+        <TextView
+            android:id="@+id/c1_num_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/common_save_button"
+            android:height="45dp"
+            android:gravity="center_vertical"
+            android:text="1."
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/c1_desc_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/common_save_button"
+            android:layout_toRightOf="@id/c1_num_textView"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
+        <Button
+            android:id="@+id/c1_sign_button"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/common_save_button"
+            android:layout_toRightOf="@id/c1_desc_editText"
+            android:width="30dp"
+            android:text="+"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/c1_import_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/common_save_button"
+            android:layout_toRightOf="@id/c1_sign_button"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="numberDecimal"
+            android:textSize="20sp"
+            tools:text="12" />
+
+        <CheckBox
+            android:id="@+id/c1_time_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c1_import_editText"
+            android:layout_alignLeft="@id/c1_desc_editText"
+            android:text="Custom Time:" />
+
+        <TextView
+            android:id="@+id/c1_time_textView"
+            android:layout_width="123dp"
+            android:layout_height="34dp"
+            android:layout_below="@id/c1_import_editText"
+            android:layout_toRightOf="@id/c1_time_checkBox"
+            android:gravity="center"
+            android:text="18:35" />
+
+        <Button
+            android:id="@+id/c1_hh_button"
+            android:layout_width="55dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/c1_import_editText"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/c1_time_textView"
+            android:height="40dp"
+            android:text="+HH"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/c1_mm_button"
+            android:layout_width="63dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/c1_import_editText"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/c1_hh_button"
+            android:height="40dp"
+            android:text="+mm"
+            android:textSize="12sp" />
+
+        <View
+            android:id="@+id/c1_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/c1_time_textView"
+            android:layout_marginTop="5dp"
+            android:background="?android:attr/listDivider"/>
+
+
+
+
+        <EditText
+            android:id="@+id/c2_desc_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c1_divider"
+            android:layout_toRightOf="@id/c2_num_textView"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
+        <Button
+            android:id="@+id/c2_sign_button"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c1_divider"
+            android:layout_toRightOf="@id/c2_desc_editText"
+            android:width="30dp"
+            android:text="+"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/c2_import_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c1_divider"
+            android:layout_toRightOf="@id/c2_sign_button"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="numberDecimal"
+            android:textSize="20sp"
+            tools:text="12" />
+
+        <CheckBox
+            android:id="@+id/c2_time_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c2_import_editText"
+            android:layout_alignLeft="@id/c2_desc_editText"
+            android:text="Custom Time:" />
+
+        <TextView
+            android:id="@+id/c2_num_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c1_divider"
+            android:height="45dp"
+            android:gravity="center_vertical"
+            android:text="2."
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/c2_time_textView"
+            android:layout_width="123dp"
+            android:layout_height="34dp"
+            android:layout_below="@id/c2_import_editText"
+            android:layout_toRightOf="@id/c2_time_checkBox"
+            android:gravity="center"
+            android:text="18:35" />
+
+        <Button
+            android:id="@+id/c2_hh_button"
+            android:layout_width="55dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/c2_import_editText"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/c2_time_textView"
+            android:height="40dp"
+            android:text="+HH"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/c2_mm_button"
+            android:layout_width="63dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/c2_import_editText"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/c2_hh_button"
+            android:height="40dp"
+            android:text="+mm"
+            android:textSize="12sp" />
+
+        <View
+            android:id="@+id/c2_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/c2_time_textView"
+            android:layout_marginTop="5dp"
+            android:background="?android:attr/listDivider"/>
+
+
+
+
+        <EditText
+            android:id="@+id/c3_desc_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c2_divider"
+            android:layout_toRightOf="@id/c3_num_textView"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
+        <Button
+            android:id="@+id/c3_sign_button"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c2_divider"
+            android:layout_toRightOf="@id/c3_desc_editText"
+            android:width="30dp"
+            android:text="+"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/c3_import_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c2_divider"
+            android:layout_toRightOf="@id/c3_sign_button"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="numberDecimal"
+            android:textSize="20sp"
+            tools:text="12" />
+
+        <CheckBox
+            android:id="@+id/c3_time_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c3_import_editText"
+            android:layout_alignLeft="@id/c3_desc_editText"
+            android:text="Custom Time:" />
+
+        <TextView
+            android:id="@+id/c3_num_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c2_divider"
+            android:height="45dp"
+            android:gravity="center_vertical"
+            android:text="3."
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/c3_time_textView"
+            android:layout_width="123dp"
+            android:layout_height="34dp"
+            android:layout_below="@id/c3_import_editText"
+            android:layout_toRightOf="@id/c3_time_checkBox"
+            android:gravity="center"
+            android:text="18:35" />
+
+        <Button
+            android:id="@+id/c3_hh_button"
+            android:layout_width="55dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/c3_import_editText"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/c3_time_textView"
+            android:height="40dp"
+            android:text="+HH"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/c3_mm_button"
+            android:layout_width="63dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/c3_import_editText"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/c3_hh_button"
+            android:height="40dp"
+            android:text="+mm"
+            android:textSize="12sp" />
+
+        <View
+            android:id="@+id/c3_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/c3_time_textView"
+            android:layout_marginTop="5dp"
+            android:background="?android:attr/listDivider"/>
+
+
+
+
+        <EditText
+            android:id="@+id/c4_desc_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c3_divider"
+            android:layout_toRightOf="@id/c4_num_textView"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
+        <Button
+            android:id="@+id/c4_sign_button"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c3_divider"
+            android:layout_toRightOf="@id/c4_desc_editText"
+            android:width="30dp"
+            android:text="+"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/c4_import_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c3_divider"
+            android:layout_toRightOf="@id/c4_sign_button"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="numberDecimal"
+            android:textSize="20sp"
+            tools:text="12" />
+
+        <CheckBox
+            android:id="@+id/c4_time_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c4_import_editText"
+            android:layout_alignLeft="@id/c4_desc_editText"
+            android:text="Custom Time:" />
+
+        <TextView
+            android:id="@+id/c4_num_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c3_divider"
+            android:height="45dp"
+            android:gravity="center_vertical"
+            android:text="4."
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/c4_time_textView"
+            android:layout_width="123dp"
+            android:layout_height="34dp"
+            android:layout_below="@id/c4_import_editText"
+            android:layout_toRightOf="@id/c4_time_checkBox"
+            android:gravity="center"
+            android:text="18:35" />
+
+        <Button
+            android:id="@+id/c4_hh_button"
+            android:layout_width="55dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/c4_import_editText"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/c4_time_textView"
+            android:height="40dp"
+            android:text="+HH"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/c4_mm_button"
+            android:layout_width="63dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/c4_import_editText"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/c4_hh_button"
+            android:height="40dp"
+            android:text="+mm"
+            android:textSize="12sp" />
+
+        <View
+            android:id="@+id/c4_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/c4_time_textView"
+            android:layout_marginTop="5dp"
+            android:background="?android:attr/listDivider"/>
+
+
+
+
+        <EditText
+            android:id="@+id/c5_desc_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c4_divider"
+            android:layout_toRightOf="@id/c5_num_textView"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
+        <Button
+            android:id="@+id/c5_sign_button"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c4_divider"
+            android:layout_toRightOf="@id/c5_desc_editText"
+            android:width="30dp"
+            android:text="+"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/c5_import_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c4_divider"
+            android:layout_toRightOf="@id/c5_sign_button"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="numberDecimal"
+            android:textSize="20sp"
+            tools:text="12" />
+
+        <CheckBox
+            android:id="@+id/c5_time_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c5_import_editText"
+            android:layout_alignLeft="@id/c5_desc_editText"
+            android:text="Custom Time:" />
+
+        <TextView
+            android:id="@+id/c5_num_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c4_divider"
+            android:height="45dp"
+            android:gravity="center_vertical"
+            android:text="5."
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/c5_time_textView"
+            android:layout_width="123dp"
+            android:layout_height="34dp"
+            android:layout_below="@id/c5_import_editText"
+            android:layout_toRightOf="@id/c5_time_checkBox"
+            android:gravity="center"
+            android:text="18:35" />
+
+        <Button
+            android:id="@+id/c5_hh_button"
+            android:layout_width="55dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/c5_import_editText"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/c5_time_textView"
+            android:height="40dp"
+            android:text="+HH"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/c5_mm_button"
+            android:layout_width="63dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/c5_import_editText"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/c5_hh_button"
+            android:height="40dp"
+            android:text="+mm"
+            android:textSize="12sp" />
+
+        <View
+            android:id="@+id/c5_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/c5_time_textView"
+            android:layout_marginTop="5dp"
+            android:background="?android:attr/listDivider"/>
+
+
+
+
+        <EditText
+            android:id="@+id/c6_desc_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c5_divider"
+            android:layout_toRightOf="@id/c6_num_textView"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
+        <Button
+            android:id="@+id/c6_sign_button"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c5_divider"
+            android:layout_toRightOf="@id/c6_desc_editText"
+            android:width="30dp"
+            android:text="+"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/c6_import_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c5_divider"
+            android:layout_toRightOf="@id/c6_sign_button"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="numberDecimal"
+            android:textSize="20sp"
+            tools:text="12" />
+
+        <CheckBox
+            android:id="@+id/c6_time_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c6_import_editText"
+            android:layout_alignLeft="@id/c6_desc_editText"
+            android:text="Custom Time:" />
+
+        <TextView
+            android:id="@+id/c6_num_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/c5_divider"
+            android:height="45dp"
+            android:gravity="center_vertical"
+            android:text="6."
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/c6_time_textView"
+            android:layout_width="123dp"
+            android:layout_height="34dp"
+            android:layout_below="@id/c6_import_editText"
+            android:layout_toRightOf="@id/c6_time_checkBox"
+            android:gravity="center"
+            android:text="18:35" />
+
+        <Button
+            android:id="@+id/c6_hh_button"
+            android:layout_width="55dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/c6_import_editText"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/c6_time_textView"
+            android:height="40dp"
+            android:text="+HH"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/c6_mm_button"
+            android:layout_width="63dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/c6_import_editText"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/c6_hh_button"
+            android:height="40dp"
+            android:text="+mm"
+            android:textSize="12sp" />
+
+        <View
+            android:id="@+id/c6_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/c6_time_textView"
+            android:layout_marginTop="5dp"
+            android:background="?android:attr/listDivider"/>
+
+
+    </RelativeLayout>
+
+</FrameLayout>

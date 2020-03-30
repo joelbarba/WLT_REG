@@ -46,6 +46,51 @@ public class DBManager {
 
 
 
+    // Returns the 6 common items
+    public C_Common_Item[] get_commons() {
+        C_Common_Item[] items = new C_Common_Item[6];
+        Cursor F_cursor = db.rawQuery("select descripcio, import, custom_time from COMMON_ITEMS order by id", null);
+        if (F_cursor.moveToFirst()) { items[0] = load_common(F_cursor); }
+        if (F_cursor.moveToNext())  { items[1] = load_common(F_cursor); }
+        if (F_cursor.moveToNext())  { items[2] = load_common(F_cursor); }
+        if (F_cursor.moveToNext())  { items[3] = load_common(F_cursor); }
+        if (F_cursor.moveToNext())  { items[4] = load_common(F_cursor); }
+        if (F_cursor.moveToNext())  { items[5] = load_common(F_cursor); }
+        F_cursor.close();
+        return items;
+    }
+
+    private C_Common_Item load_common(Cursor cur) {
+        C_Common_Item item = new C_Common_Item();
+        item.desc = cur.getString(0);
+        item.import_mov = cur.getDouble(1);
+        item.custom_time = cur.getLong(2);
+        if (item.import_mov < 0) { item.signe = "-"; } else { item.signe = "+"; }
+        DecimalFormat twoDForm = new DecimalFormat("0.00");
+        item.import_str = String.valueOf(twoDForm.format(item.import_mov)).replace(".", ",").replace("-", "");
+        return item;
+    }
+
+    // Actualitza el moviment.
+    public boolean save_common(C_Common_Item[] commons) {
+        uCommSent(commons, 0);
+        uCommSent(commons, 1);
+        uCommSent(commons, 2);
+        uCommSent(commons, 3);
+        uCommSent(commons, 4);
+        uCommSent(commons, 5);
+        return true;
+    }
+    private void uCommSent(C_Common_Item[] commons, Integer num) {
+        commons[num].import_mov = convertImportStr(commons[num].import_str, commons[num].signe);
+        String sent = "update COMMON_ITEMS " +
+                "  set descripcio = '" + commons[num].desc + "', " +
+                     " import = " + String.valueOf(commons[num].import_mov)
+             + " where id = " + String.valueOf(num + 1);
+        db.execSQL(sent);
+    };
+
+
     // Retorna el saldo actual
     public double get_saldo() {
         double saldo = 0;

@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements WRInterface {
     public double balance = 0;
     public int selMovId = 0;
     public C_Moviment selMov = new C_Moviment();
+    public C_Common_Item[] commons;
     public String currentDBPath  = "/data/data/barba.joel.wlt_reg/databases/DB_WALLET_REG";
     public String backupDBPath   = Environment.getExternalStorageDirectory() + File.separator + "DB_WLT_REG.db";
     public String backupFilePath = Environment.getExternalStorageDirectory() + File.separator + "FILE_WLT_REG.csv";
@@ -51,7 +52,8 @@ public class MainActivity extends AppCompatActivity implements WRInterface {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.action_settings:  gotoSettings(); break;  // Config Fragment
+                    case R.id.action_settings:  gotoFragment(R.id.action_Main_to_Settings); break;  // Config Fragment
+                    case R.id.action_commons:   gotoFragment(R.id.action_Main_to_Commons); break;  // Common items Fragment
 //                    case R.id.mov_list_show:
 //                        saltar_llista_movs();
 //                        break;
@@ -65,11 +67,14 @@ public class MainActivity extends AppCompatActivity implements WRInterface {
         this.DB_WR.open();
         this.DB_WR.ini_db(false);
         this.balance = this.DB_WR.get_saldo();
+        this.commons = this.DB_WR.get_commons();
+
+        gotoFragment(R.id.action_Main_to_Commons);
     }
 
-    private void gotoSettings() {
+    private void gotoFragment(int fId) {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        navController.navigate(R.id.action_Main_to_Settings);
+        navController.navigate(fId);
     }
 
     @Override
@@ -125,6 +130,13 @@ public class MainActivity extends AppCompatActivity implements WRInterface {
     public int getNextOffset(int id_ord_offset, int window_count) { return DB_WR.get_next_offset(id_ord_offset, window_count); }
     public int getPrevOffset(int id_ord_offset, int window_count) { return DB_WR.get_prev_offset(id_ord_offset, window_count); }
     public int[] getPagInfo(int id_ord_offset, int window_count) { return DB_WR.get_pag_info(id_ord_offset, window_count); }
+
+    public C_Common_Item[] getCommons() { return this.commons; };
+    public void saveCommons(C_Common_Item[] updatedCommons) {
+        commons = updatedCommons;
+        DB_WR.save_common(updatedCommons);
+        growl("Common items actualitzats");
+    };
 
 
     // It takes 'DB_WLT_REG.db' file external storage root and imports it to DB
@@ -218,7 +230,6 @@ public class MainActivity extends AppCompatActivity implements WRInterface {
         String import_num_ok = String.valueOf(twoDForm.format(import_num));
         return import_num_ok.replace(".", ",");
     }
-
 
     private String padTwo(String val) {
         return String.format("%2s", val).replace(' ', '0');

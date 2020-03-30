@@ -22,14 +22,15 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
+import java.text.DecimalFormat;
+
 import static com.example.wlt_reg3.R.color.colorImpNeg;
 
 public class MainFragment extends Fragment {
-
-//    private DBManager DB_WR = null;
     private String sign = "-";
     private WRInterface ac;
     private View vm;
+    public C_Common_Item[] commons;
 
 
     @Override
@@ -60,6 +61,14 @@ public class MainFragment extends Fragment {
         final Button button_op4 = (Button) view.findViewById(R.id.button_op4);
         final Button button_op5 = (Button) view.findViewById(R.id.button_op5);
 
+        this.commons = ac.getCommons();
+        button_op1.setText(this.commons[0].desc);
+        button_op2.setText(this.commons[1].desc);
+        button_op3.setText(this.commons[2].desc);
+        button_op4.setText(this.commons[3].desc);
+        button_op5.setText(this.commons[4].desc);
+        button_op6.setText(this.commons[5].desc);
+
         this.showBalance();
 
         edit_new_input.setOnKeyListener(new EditText.OnKeyListener() {
@@ -73,34 +82,37 @@ public class MainFragment extends Fragment {
         button_op1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewOp("6", "-", "Pint");
+                createNewOp(ac.formatImport(commons[0].import_mov), commons[0].signe, commons[0].desc);
             }
         });
         button_op2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewOp("2,9", "-", "Latte");
+                createNewOp(ac.formatImport(commons[1].import_mov), commons[1].signe, commons[1].desc);
             }
         });
         button_op3.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { createNewOp("5,65", "-", "Bagel");
+            public void onClick(View v) {
+                createNewOp(ac.formatImport(commons[2].import_mov), commons[2].signe, commons[2].desc);
             }
         });
         button_op4.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { createNewOp("2,15", "-", "Espresso");
+            public void onClick(View v) {
+                createNewOp(ac.formatImport(commons[3].import_mov), commons[3].signe, commons[3].desc);
             }
         });
         button_op5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewOp("8,5", "-", "Sushi");
+                createNewOp(ac.formatImport(commons[4].import_mov), commons[4].signe, commons[4].desc);
             }
         });
         button_op6.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { createNewOp("40", "+", "Cash AIB");
+            public void onClick(View v) {
+                createNewOp(ac.formatImport(commons[5].import_mov), commons[5].signe, commons[5].desc);
             }
         });
 
@@ -153,7 +165,7 @@ public class MainFragment extends Fragment {
             edit_new_input.requestFocus();
             return;
         }
-        double balance = ac.insertNewMov(str_import, sign_import, descripcio);
+        double balance = ac.insertNewMov(str_import.replace("-", ""), sign_import, descripcio);
         double num_import = Double.parseDouble(str_import.replace(",", "."));
         showBalance();
 

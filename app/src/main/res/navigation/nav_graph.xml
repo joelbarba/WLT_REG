@@ -10,17 +10,25 @@
         android:name="com.example.wlt_reg3.MainFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_main">
-        <action android:id="@+id/action_Main_to_List"    app:destination="@id/SecondFragment" />
-        <action android:id="@+id/action_Main_to_Details" app:destination="@id/MovDetail" />
-        <action android:id="@+id/action_Main_to_Settings" app:destination="@id/SettingsFragment2" />
+        <action android:id="@+id/action_Main_to_List"    app:destination="@id/SecondFragment"/>
+        <action android:id="@+id/action_Main_to_Details" app:destination="@id/MovDetail"/>
+        <action android:id="@+id/action_Main_to_Settings" app:destination="@id/SettingsFragment"/>
+        <action android:id="@+id/action_Main_to_Commons" app:destination="@id/CommonsFragment"/>
     </fragment>
 
     <fragment
-        android:id="@+id/SettingsFragment2"
+        android:id="@+id/SettingsFragment"
         android:name="com.example.wlt_reg3.SettingsFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_list">
-        <action android:id="@+id/action_Settings_to_Main"  app:destination="@id/MainFragment" />
+        <action android:id="@+id/action_Settings_to_Main"  app:destination="@id/MainFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/CommonsFragment"
+        android:name="com.example.wlt_reg3.CommonsFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_list">
+        <action android:id="@+id/action_Commons_to_Main"  app:destination="@id/MainFragment"/>
     </fragment>
 
     <fragment

@@ -30,7 +30,7 @@ public class ListFragment extends Fragment {
     public int id_ord_offset = 0;
     public int id_next_offset = 0;
     public int id_prev_offset = 0;
-    public int window_count = 10;
+    public int window_count = 100;
 
     public C_List_Mov_Adapter adp;
 

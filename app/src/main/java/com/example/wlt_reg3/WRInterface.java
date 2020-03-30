@@ -21,6 +21,9 @@ public interface WRInterface {
     public int getPrevOffset(int id_ord_offset, int window_count);
     public int[] getPagInfo(int id_ord_offset, int window_count);
 
+    public C_Common_Item[] getCommons();
+    public void saveCommons(C_Common_Item[] updatedCommons);
+
     public void importDB();
     public void exportCSV();
     public void exportDB();
