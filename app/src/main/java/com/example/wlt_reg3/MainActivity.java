@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements WRInterface {
         this.balance = this.DB_WR.get_saldo();
         this.commons = this.DB_WR.get_commons();
 
-        gotoFragment(R.id.action_Main_to_Commons);
+//        gotoFragment(R.id.action_Main_to_Commons);
     }
 
     private void gotoFragment(int fId) {

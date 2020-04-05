@@ -234,7 +234,7 @@ public class DBManager {
                 "select id_mov as _id, " +
                 "       import, " +
                 "       id_ordre || ' - ' || descripcio, " +
-                "       strftime('%Y-%m-%d', data_mov) || ' - ' || " +
+                "       strftime('%Y-%m-%d', data_mov) || '   ' || " +
                 "       (case cast (strftime('%w', data_mov) as integer)" +
                 "           when 0 then 'Sun'" +
                 "           when 1 then 'Mon'" +
