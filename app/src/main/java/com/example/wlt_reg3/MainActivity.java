@@ -27,6 +27,7 @@ import java.io.OutputStreamWriter;
 import java.nio.channels.FileChannel;
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements WRInterface {
     public DBManager DB_WR = null;
@@ -101,12 +102,12 @@ public class MainActivity extends AppCompatActivity implements WRInterface {
 
     public double getBalance() { return this.balance; }
 
-    public double insertNewMov(String str_import, String sign_import, String desc) {
+    public double insertNewMov(String str_import, String sign_import, String desc, Long time) {
         String descCap = desc;
         if (desc.length() > 1) { // Automatically turn first char Uppercase
             descCap = desc.substring(0, 1).toUpperCase() + desc.substring(1);
         }
-        this.selMovId = (int) this.DB_WR.insert_new_mov(str_import, sign_import, descCap);
+        this.selMovId = (int) this.DB_WR.insert_new_mov(str_import, sign_import, descCap, time);
         this.balance = this.DB_WR.get_saldo();
         return this.balance;
     }
@@ -231,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements WRInterface {
         return import_num_ok.replace(".", ",");
     }
 
-    private String padTwo(String val) {
+    public String padTwo(String val) {
         return String.format("%2s", val).replace(' ', '0');
     }
 

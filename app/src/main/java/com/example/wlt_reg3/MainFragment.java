@@ -82,37 +82,37 @@ public class MainFragment extends Fragment {
         button_op1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewOp(ac.formatImport(commons[0].import_mov), commons[0].signe, commons[0].desc);
+                createNewOp(ac.formatImport(commons[0].import_mov), commons[0].signe, commons[0].desc, commons[0].custom_time);
             }
         });
         button_op2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewOp(ac.formatImport(commons[1].import_mov), commons[1].signe, commons[1].desc);
+                createNewOp(ac.formatImport(commons[1].import_mov), commons[1].signe, commons[1].desc, commons[1].custom_time);
             }
         });
         button_op3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewOp(ac.formatImport(commons[2].import_mov), commons[2].signe, commons[2].desc);
+                createNewOp(ac.formatImport(commons[2].import_mov), commons[2].signe, commons[2].desc, commons[2].custom_time);
             }
         });
         button_op4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewOp(ac.formatImport(commons[3].import_mov), commons[3].signe, commons[3].desc);
+                createNewOp(ac.formatImport(commons[3].import_mov), commons[3].signe, commons[3].desc, commons[3].custom_time);
             }
         });
         button_op5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewOp(ac.formatImport(commons[4].import_mov), commons[4].signe, commons[4].desc);
+                createNewOp(ac.formatImport(commons[4].import_mov), commons[4].signe, commons[4].desc, commons[4].custom_time);
             }
         });
         button_op6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewOp(ac.formatImport(commons[5].import_mov), commons[5].signe, commons[5].desc);
+                createNewOp(ac.formatImport(commons[5].import_mov), commons[5].signe, commons[5].desc, commons[5].custom_time);
             }
         });
 
@@ -129,7 +129,7 @@ public class MainFragment extends Fragment {
         button_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createNewOp(edit_new_input.getText().toString(), sign, "");
+                createNewOp(edit_new_input.getText().toString(), sign, "", (long) -1);
             }
         });
 
@@ -159,13 +159,13 @@ public class MainFragment extends Fragment {
     }
 
     // Add new movement
-    private void createNewOp(String str_import, String sign_import, String descripcio) {
+    private void createNewOp(String str_import, String sign_import, String descripcio, Long time) {
         EditText edit_new_input = (EditText) this.vm.findViewById(R.id.edit_new_input);
         if (str_import.equals("")) {
             edit_new_input.requestFocus();
             return;
         }
-        double balance = ac.insertNewMov(str_import.replace("-", ""), sign_import, descripcio);
+        double balance = ac.insertNewMov(str_import.replace("-", ""), sign_import, descripcio, time);
         double num_import = Double.parseDouble(str_import.replace(",", "."));
         showBalance();
 

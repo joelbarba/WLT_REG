@@ -145,10 +145,12 @@ public class ListFragment extends Fragment {
         if ((id_next_offset == -1) && (id_prev_offset == -1)) {
             id_button_next.setVisibility(View.INVISIBLE);
             id_button_prev.setVisibility(View.INVISIBLE);
+            id_titol_llista_movs.setVisibility(View.GONE);
 
         } else {
             id_button_next.setVisibility(View.VISIBLE);
             id_button_prev.setVisibility(View.VISIBLE);
+            id_titol_llista_movs.setVisibility(View.VISIBLE);
 
             id_button_next.setEnabled((id_next_offset != -1));
             id_button_prev.setEnabled((id_prev_offset != -1));

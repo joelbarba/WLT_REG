@@ -84,9 +84,10 @@ public class DBManager {
     private void uCommSent(C_Common_Item[] commons, Integer num) {
         commons[num].import_mov = convertImportStr(commons[num].import_str, commons[num].signe);
         String sent = "update COMMON_ITEMS " +
-                "  set descripcio = '" + commons[num].desc + "', " +
-                     " import = " + String.valueOf(commons[num].import_mov)
-             + " where id = " + String.valueOf(num + 1);
+                "  set descripcio = '" + commons[num].desc + "' " +
+                    ", import = " + String.valueOf(commons[num].import_mov) +
+                    ", custom_time = " + String.valueOf(commons[num].custom_time) +
+               " where id = " + String.valueOf(num + 1);
         db.execSQL(sent);
     };
 
@@ -179,13 +180,18 @@ public class DBManager {
 
 
     // Inserir nou moviment, i retornar el saldo actual
-    public double insert_new_mov(String str_import, String sign_import, String descripcio) {
-
-           double mov_import = convertImportStr(str_import, sign_import);
+    public double insert_new_mov(String str_import, String sign_import, String descripcio, Long time) {
+       double mov_import = convertImportStr(str_import, sign_import);
 
         if (mov_import != 0) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date = new Date();
+            if (time >= 0) {
+                int min = (int) (time % 60);
+                int hour = (int) (time - min) / 60;
+                date.setHours(hour);
+                date.setMinutes(min);
+            }
 
 //            int h = date.get(Calendar.HOUR_OF_DAY);
 //            mov_date.get(Calendar.HOUR_OF_DAY)
@@ -228,7 +234,7 @@ public class DBManager {
                 "select id_mov as _id, " +
                 "       import, " +
                 "       id_ordre || ' - ' || descripcio, " +
-                "       strftime('%Y-%m-%d', data_mov) || ' ' || " +
+                "       strftime('%Y-%m-%d', data_mov) || ' - ' || " +
                 "       (case cast (strftime('%w', data_mov) as integer)" +
                 "           when 0 then 'Sun'" +
                 "           when 1 then 'Mon'" +

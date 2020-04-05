@@ -7,7 +7,7 @@ public interface WRInterface {
     public DBManager DB_WR = null;
 
     public double getBalance();
-    public double insertNewMov(String str_import, String sign_import, String descripcio);
+    public double insertNewMov(String str_import, String sign_import, String descripcio, Long time);
 
     public int getSelMovId();
     public void setSelMovId(int movId);
@@ -30,6 +30,7 @@ public interface WRInterface {
     public void resetDB();
 
     public String formatImport(double import_num);
+    public String padTwo(String val);
     public void growl(String text);
 
 }
