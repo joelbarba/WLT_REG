@@ -167,8 +167,8 @@ public class DetailFragment extends Fragment {
                 }
 
                 ac.saveMov(mov_tmp);
-                NavHostFragment.findNavController(DetailFragment.this).navigate(R.id.action_Details_to_List);
-//                NavHostFragment.findNavController(DetailFragment.this).popBackStack();
+//                NavHostFragment.findNavController(DetailFragment.this).navigate(R.id.action_Details_to_List);
+                NavHostFragment.findNavController(DetailFragment.this).popBackStack();
             }
         });
 

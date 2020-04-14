@@ -55,7 +55,7 @@ public class DataBaseSQLiteHelper extends SQLiteOpenHelper {
     public void resetDB(SQLiteDatabase db) {
         db.execSQL("drop table if exists MOVIMENTS;");
         db.execSQL("drop table if exists SALDO_ACT;");
-        db.execSQL("drop table if exists CUSTOM_ITEMS;");
+        db.execSQL("drop table if exists COMMON_ITEMS;");
 
         db.execSQL(sent_create_saldo_act);
         db.execSQL(sent_create_moviments);
@@ -76,18 +76,11 @@ public class DataBaseSQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
-        db.execSQL(sent_create_saldo_act);
-        db.execSQL(sent_create_moviments);
-        db.execSQL(sent_create_commons);
-        db.execSQL("create trigger REBUILD_MOVS_SEQ1 after insert on MOVIMENTS begin " + sent_body_trigger + " end;");
-        db.execSQL("create trigger REBUILD_MOVS_SEQ2 after delete on MOVIMENTS begin " + sent_body_trigger + " end;");
-        db.execSQL("create trigger REBUILD_MOVS_SEQ3 after update on MOVIMENTS begin " + sent_body_trigger + " end;");
+        resetDB(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int versionAnterior, int versionNueva) {
-
         db.execSQL("drop trigger if exists SALDO_ACT_TRIGGER;");
         db.execSQL("drop trigger if exists SALDO_ACT_TRIGGER2;");
         db.execSQL("drop trigger if exists REBUILD_MOVS_SEQ1;");
