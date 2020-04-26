@@ -53,6 +53,7 @@ public class MainFragment extends Fragment {
         final TextView signText = (TextView) view.findViewById(R.id.signText);
         final Button button_sign = (Button) view.findViewById(R.id.button_sign);
         final Button button_list = (Button) view.findViewById(R.id.button_list);
+        final Button button_list2 = (Button) view.findViewById(R.id.button_list2);
         final Button button_add = (Button) view.findViewById(R.id.button_add);
         final Button button_op1 = (Button) view.findViewById(R.id.button_op1);
         final Button button_op2 = (Button) view.findViewById(R.id.button_op2);
@@ -119,6 +120,12 @@ public class MainFragment extends Fragment {
 
         // LIST button
         button_list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(MainFragment.this).navigate(R.id.action_Main_to_List);
+            }
+        });
+        button_list2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(MainFragment.this).navigate(R.id.action_Main_to_List);
