@@ -8,8 +8,5 @@ why I built this app. It won't help you save money, but at least you can keep tr
 
 ## Examples:
 
-<img height="350" src="https://raw.githubusercontent.com/joelbarba/WLT_REG/master/sample1.png"/>
-<img height="350" src="https://raw.githubusercontent.com/joelbarba/WLT_REG/master/sample2.png"/>
-<img height="350" src="https://raw.githubusercontent.com/joelbarba/WLT_REG/master/sample3.png"/>
-<img height="350" src="https://raw.githubusercontent.com/joelbarba/WLT_REG/master/sample4.png"/>
+<img height="350" src="https://raw.githubusercontent.com/joelbarba/WLT_REG/master/WLT_REG.png"/>
 
