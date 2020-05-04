@@ -263,7 +263,12 @@ public class DetailFragment extends Fragment {
         });
 
 
-        input_desc_mov.requestFocus();    // Focus al input text de la descripció
+        // input_desc_mov.setFocusableInTouchMode(true);
+//        input_desc_mov.requestFocus();    // Focus al input text de la descripció
+//        input_desc_mov.onKeyUp(KeyEvent.KEYCODE_DPAD_CENTER, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_CENTER));
+//        input_desc_mov.callOnClick();
+//        input_desc_mov.performClick();
+
 
     }
 
